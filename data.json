@@ -1,0 +1,34 @@
+{
+  "asOf": "4/26/26",
+  "active": [
+    {"name": "ZEKE", "value": 24},
+    {"name": "WOODY", "value": 21},
+    {"name": "COLLIN", "value": 19},
+    {"name": "NOE", "value": 19},
+    {"name": "LINK", "value": 19},
+    {"name": "BRAD", "value": 13},
+    {"name": "BOB", "value": 13},
+    {"name": "JESUS", "value": 10},
+    {"name": "MARTIN", "value": 10},
+    {"name": "MANUEL", "value": 10},
+    {"name": "KYLE", "value": 9},
+    {"name": "LEO", "value": 9},
+    {"name": "GABRIEL", "value": 6},
+    {"name": "NOE M", "value": 2}
+  ],
+  "completedMTD": [
+    {"name": "JESUS", "value": 66},
+    {"name": "BOB", "value": 62},
+    {"name": "COLLIN", "value": 58},
+    {"name": "BRAD", "value": 51},
+    {"name": "GABRIEL", "value": 51},
+    {"name": "KYLE", "value": 50},
+    {"name": "MARTIN", "value": 38},
+    {"name": "ZEKE", "value": 36},
+    {"name": "WOODY", "value": 25},
+    {"name": "LINK", "value": 25},
+    {"name": "NOE", "value": 24},
+    {"name": "LEO", "value": 17},
+    {"name": "MANUEL", "value": 17}
+  ]
+}

@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Work Orders Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000000;
+      color: #ffffff;
+      font-family: 'Archivo', Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: geometricPrecision;
+    }
+
+    #stage {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      min-width: 320px;
+      min-height: 240px;
+      background: #000000;
+    }
+
+    .chart-screen {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      display: none;
+      background: #000000;
+    }
+
+    .chart-screen.active-screen {
+      display: block;
+      opacity: 1;
+    }
+
+    .chart-screen.fade-out {
+      opacity: 0;
+      transition: opacity 400ms linear;
+    }
+
+    .header {
+      position: absolute;
+      left: 0;
+      top: 2.2vh;
+      width: 100%;
+      text-align: center;
+      z-index: 2;
+    }
+
+    .title {
+      margin: 0;
+      padding: 0;
+      font-size: 5.45vw;
+      line-height: 0.95;
+      font-weight: 900;
+      letter-spacing: -0.045em;
+      color: #f8f8f8;
+      text-shadow: 0 0 1px rgba(255,255,255,0.35);
+    }
+
+    .subtitle {
+      margin-top: 1.0vh;
+      font-size: 2.05vw;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: #bcbcbc;
+    }
+
+    .plot {
+      position: absolute;
+      left: 3.3vw;
+      right: 4.3vw;
+      top: 15.2vh;
+      bottom: 8.4vh;
+    }
+
+    .rows {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 4.8vh;
+      overflow: hidden;
+    }
+
+    .row {
+      position: relative;
+      width: 100%;
+    }
+
+    .name {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 12.7vw;
+      margin-top: -1.13vw;
+      text-align: right;
+      font-size: 2.12vw;
+      line-height: 2.28vw;
+      font-weight: 900;
+      letter-spacing: -0.035em;
+      color: #fafafa;
+      white-space: nowrap;
+      overflow: visible;
+      text-overflow: clip;
+    }
+
+    .bar-area {
+      position: absolute;
+      left: 15.0vw;
+      right: 3.8vw;
+      top: 50%;
+      height: 3.95vh;
+      margin-top: -1.975vh;
+    }
+
+    .bar-shell {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 0;
+      min-width: 0;
+      background: #777777;
+      border-radius: 0 2px 2px 0;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+      transition-property: width;
+      transition-duration: 8000ms;
+      transition-timing-function: cubic-bezier(0.08, 0.82, 0.18, 1);
+    }
+
+    .value {
+      position: absolute;
+      top: 50%;
+      margin-top: -1.48vw;
+      margin-left: 1.0vw;
+      font-size: 2.72vw;
+      line-height: 2.95vw;
+      font-weight: 900;
+      letter-spacing: -0.045em;
+      color: #ffffff;
+      opacity: 0;
+      transform: scale(0.7);
+      -webkit-transform: scale(0.7);
+      text-shadow: 0 0 1px rgba(255,255,255,0.35);
+      transition-property: opacity, transform, -webkit-transform;
+      transition-duration: 240ms;
+      transition-timing-function: cubic-bezier(0.20, 1.20, 0.25, 1);
+      white-space: nowrap;
+    }
+
+    .value.visible {
+      opacity: 1;
+      transform: scale(1);
+      -webkit-transform: scale(1);
+    }
+
+    .axis {
+      position: absolute;
+      left: 15.0vw;
+      right: 0;
+      bottom: 0;
+      height: 3.8vh;
+      border-top: 2px solid #dedede;
+    }
+
+    .tick {
+      position: absolute;
+      top: -2px;
+      height: 100%;
+      width: 1px;
+    }
+
+    .tick-mark {
+      position: absolute;
+      left: 0;
+      top: -0.9vh;
+      width: 2px;
+      height: 1.2vh;
+      background: #dedede;
+    }
+
+    .tick-label {
+      position: absolute;
+      left: -1.0vw;
+      top: 1.25vh;
+      width: 2.0vw;
+      text-align: center;
+      color: #f7f7f7;
+      font-size: 1.72vw;
+      line-height: 1.72vw;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      text-shadow: 0 0 1px rgba(255,255,255,0.3);
+    }
+
+    .last-updated {
+      position: absolute;
+      right: 1.7vw;
+      bottom: 1.15vh;
+      font-size: 1.0vw;
+      line-height: 1.1vw;
+      color: #777777;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      opacity: 0.75;
+    }
+
+    .error {
+      position: absolute;
+      left: 5vw;
+      right: 5vw;
+      top: 45vh;
+      text-align: left;
+      font-size: 2.2vw;
+      line-height: 1.35;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    @media screen and (max-aspect-ratio: 16/9) {
+      .title { font-size: 5.1vw; }
+      .subtitle { font-size: 1.95vw; }
+      .name { font-size: 2.0vw; }
+    }
+  </style>
+</head>
+<body>
+  <div id="stage">
+    <div id="screen1" class="chart-screen"></div>
+    <div id="screen2" class="chart-screen"></div>
+  </div>
+
+  <script>
+    (function () {
+      var INITIAL_DELAY = 5000;
+      var CHART_DURATION = 20000;
+      var BAR_GROW = 8000;
+      var NUMBERS_START = 8000;
+      var NUMBERS_TOTAL = 1500;
+      var FADE_START = 19600;
+      var FINAL_FREEZE = INITIAL_DELAY + 40000;
+
+      var fallbackData = {
+        "asOf": "4/26/26",
+        "active": [
+          {"name": "ZEKE", "value": 24},
+          {"name": "WOODY", "value": 21},
+          {"name": "COLLIN", "value": 19},
+          {"name": "NOE", "value": 19},
+          {"name": "LINK", "value": 19},
+          {"name": "BRAD", "value": 13},
+          {"name": "BOB", "value": 13},
+          {"name": "JESUS", "value": 10},
+          {"name": "MARTIN", "value": 10},
+          {"name": "MANUEL", "value": 10},
+          {"name": "KYLE", "value": 9},
+          {"name": "LEO", "value": 9},
+          {"name": "GABRIEL", "value": 6},
+          {"name": "NOE M", "value": 2}
+        ],
+        "completedMTD": [
+          {"name": "JESUS", "value": 66},
+          {"name": "BOB", "value": 62},
+          {"name": "COLLIN", "value": 58},
+          {"name": "BRAD", "value": 51},
+          {"name": "GABRIEL", "value": 51},
+          {"name": "KYLE", "value": 50},
+          {"name": "MARTIN", "value": 38},
+          {"name": "ZEKE", "value": 36},
+          {"name": "WOODY", "value": 25},
+          {"name": "LINK", "value": 25},
+          {"name": "NOE", "value": 24},
+          {"name": "LEO", "value": 17},
+          {"name": "MANUEL", "value": 17}
+        ]
+      };
+
+      function byId(id) {
+        return document.getElementById(id);
+      }
+
+      function createElement(tag, className) {
+        var el = document.createElement(tag);
+        if (className) {
+          el.className = className;
+        }
+        return el;
+      }
+
+      function cloneItems(items) {
+        var out = [];
+        var i;
+        for (i = 0; i < items.length; i += 1) {
+          out.push({
+            name: String(items[i].name),
+            value: Number(items[i].value)
+          });
+        }
+        return out;
+      }
+
+      function sortHighToLow(items) {
+        items.sort(function (a, b) {
+          if (b.value === a.value) {
+            return 0;
+          }
+          return b.value - a.value;
+        });
+        return items;
+      }
+
+      function niceAxisMax(maxValue) {
+        if (maxValue <= 10) { return 10; }
+        if (maxValue <= 25) { return 25; }
+        if (maxValue <= 50) { return 50; }
+        if (maxValue <= 70) { return 70; }
+        if (maxValue <= 100) { return 100; }
+        return Math.ceil(maxValue / 20) * 20;
+      }
+
+      function axisTicks(axisMax) {
+        var ticks = [];
+        var step;
+        var i;
+        if (axisMax <= 25) {
+          step = 5;
+        } else if (axisMax <= 70) {
+          step = 10;
+        } else {
+          step = 20;
+        }
+        for (i = 0; i <= axisMax; i += step) {
+          ticks.push(i);
+        }
+        if (ticks[ticks.length - 1] !== axisMax) {
+          ticks.push(axisMax);
+        }
+        return ticks;
+      }
+
+      function getActiveColor(i, total) {
+        var colors = [
+          '#ff0019', '#ff2a1f', '#ff4a18', '#ff5f14', '#ff7410',
+          '#ff8b0f', '#ff9f0f', '#ffb112', '#ffc414', '#ffd316',
+          '#ffde17', '#ffe518', '#ffea18', '#ffee18', '#e5ef16',
+          '#d8eb1f', '#c6e72c', '#aee048', '#8ed15a', '#6fbd5f'
+        ];
+        if (total <= 1) { return colors[0]; }
+        return colors[Math.floor((colors.length - 1) * (i / (total - 1)))];
+      }
+
+      function getCompletedColor(i, total) {
+        var colors = [
+          '#00943f', '#159f43', '#22a946', '#36b84a', '#51c452',
+          '#6ed05d', '#89d86a', '#a3df5c', '#b7e84c', '#c9ef3f',
+          '#d9f338', '#e6f63b', '#f1f83f', '#f4f845', '#f6f84e',
+          '#f7f65b', '#f4f067', '#eced6e', '#e3e873', '#d7e37a'
+        ];
+        if (total <= 1) { return colors[0]; }
+        return colors[Math.round((colors.length - 1) * (i / (total - 1)))];
+      }
+
+      function getColor(type, index, total) {
+        if (type === 'completed') {
+          return getCompletedColor(index, total);
+        }
+        return getActiveColor(index, total);
+      }
+
+      function renderChart(screen, options) {
+        var items = sortHighToLow(cloneItems(options.items));
+        var maxValue = 0;
+        var axisMax;
+        var ticks;
+        var header;
+        var title;
+        var subtitle;
+        var plot;
+        var rows;
+        var axis;
+        var lastUpdated;
+        var rowHeight;
+        var i;
+
+        for (i = 0; i < items.length; i += 1) {
+          if (items[i].value > maxValue) {
+            maxValue = items[i].value;
+          }
+        }
+
+        axisMax = niceAxisMax(maxValue);
+        ticks = axisTicks(axisMax);
+        screen.innerHTML = '';
+
+        header = createElement('div', 'header');
+        title = createElement('h1', 'title');
+        subtitle = createElement('div', 'subtitle');
+        plot = createElement('div', 'plot');
+        rows = createElement('div', 'rows');
+        axis = createElement('div', 'axis');
+        lastUpdated = createElement('div', 'last-updated');
+
+        title.innerHTML = options.title;
+        subtitle.innerHTML = options.subtitle;
+        lastUpdated.innerHTML = 'Last updated: ' + options.asOf;
+
+        header.appendChild(title);
+        header.appendChild(subtitle);
+        plot.appendChild(rows);
+        plot.appendChild(axis);
+        screen.appendChild(header);
+        screen.appendChild(plot);
+        screen.appendChild(lastUpdated);
+
+        if (items.length < 1) {
+          return;
+        }
+
+        rowHeight = 100 / items.length;
+
+        for (i = 0; i < items.length; i += 1) {
+          var item = items[i];
+          var row = createElement('div', 'row');
+          var name = createElement('div', 'name');
+          var barArea = createElement('div', 'bar-area');
+          var barShell = createElement('div', 'bar-shell');
+          var bar = createElement('div', 'bar');
+          var value = createElement('div', 'value');
+          var pct = (Number(item.value) / axisMax) * 100;
+
+          row.style.height = rowHeight + '%';
+          name.innerHTML = item.name;
+          bar.style.backgroundColor = getColor(options.type, i, items.length);
+          bar.style.transitionDuration = BAR_GROW + 'ms';
+          bar.setAttribute('data-width', pct + '%');
+          value.innerHTML = item.value;
+          value.style.left = pct + '%';
+
+          if (items.length > 16) {
+            name.style.fontSize = '1.78vw';
+            name.style.lineHeight = '1.95vw';
+            name.style.marginTop = '-0.98vw';
+            value.style.fontSize = '2.25vw';
+            value.style.lineHeight = '2.45vw';
+            value.style.marginTop = '-1.22vw';
+            barArea.style.height = '2.9vh';
+            barArea.style.marginTop = '-1.45vh';
+          } else if (items.length > 14) {
+            name.style.fontSize = '1.95vw';
+            name.style.lineHeight = '2.1vw';
+            name.style.marginTop = '-1.05vw';
+            value.style.fontSize = '2.45vw';
+            value.style.lineHeight = '2.65vw';
+            value.style.marginTop = '-1.32vw';
+            barArea.style.height = '3.35vh';
+            barArea.style.marginTop = '-1.675vh';
+          }
+
+          barShell.appendChild(bar);
+          barShell.appendChild(value);
+          barArea.appendChild(barShell);
+          row.appendChild(name);
+          row.appendChild(barArea);
+          rows.appendChild(row);
+        }
+
+        for (i = 0; i < ticks.length; i += 1) {
+          var tick = createElement('div', 'tick');
+          var mark = createElement('div', 'tick-mark');
+          var label = createElement('div', 'tick-label');
+          tick.style.left = ((ticks[i] / axisMax) * 100) + '%';
+          label.innerHTML = ticks[i];
+          tick.appendChild(mark);
+          tick.appendChild(label);
+          axis.appendChild(tick);
+        }
+      }
+
+      function resetChart(screen) {
+        var bars = screen.getElementsByClassName('bar');
+        var values = screen.getElementsByClassName('value');
+        var i;
+        for (i = 0; i < bars.length; i += 1) {
+          bars[i].style.transitionDuration = BAR_GROW + 'ms';
+          bars[i].style.width = '0';
+        }
+        for (i = 0; i < values.length; i += 1) {
+          values[i].className = 'value';
+        }
+      }
+
+      function startChart(screen, delayStart) {
+        var bars;
+        var values;
+        var i;
+        var delayBase = Number(delayStart) || 0;
+        screen.className = 'chart-screen active-screen';
+        resetChart(screen);
+        bars = screen.getElementsByClassName('bar');
+        values = screen.getElementsByClassName('value');
+        setTimeout(function () {
+          var j;
+          for (j = 0; j < bars.length; j += 1) {
+            bars[j].style.width = bars[j].getAttribute('data-width');
+          }
+        }, delayBase + 50);
+        for (i = 0; i < values.length; i += 1) {
+          (function (idx) {
+            var delay = delayBase + NUMBERS_START + Math.round((NUMBERS_TOTAL / Math.max(1, values.length - 1)) * idx);
+            setTimeout(function () {
+              values[idx].className = 'value visible';
+            }, delay);
+          }(i));
+        }
+      }
+
+      function freezeChart(screen) {
+        var bars = screen.getElementsByClassName('bar');
+        var values = screen.getElementsByClassName('value');
+        var i;
+        screen.className = 'chart-screen active-screen';
+        for (i = 0; i < bars.length; i += 1) {
+          bars[i].style.transitionDuration = '0ms';
+          bars[i].style.width = bars[i].getAttribute('data-width');
+        }
+        for (i = 0; i < values.length; i += 1) {
+          values[i].className = 'value visible';
+        }
+      }
+
+      function showError(msg) {
+        byId('stage').innerHTML = '<div class="error">' + msg + '</div>';
+      }
+
+      function validData(data) {
+        if (!data) { return false; }
+        if (!data.asOf) { return false; }
+        if (!data.active || !data.completedMTD) { return false; }
+        if (typeof data.active.length !== 'number') { return false; }
+        if (typeof data.completedMTD.length !== 'number') { return false; }
+        return true;
+      }
+
+      function init(data) {
+        var screen1 = byId('screen1');
+        var screen2 = byId('screen2');
+
+        if (!validData(data)) {
+          data = fallbackData;
+        }
+
+        renderChart(screen1, {
+          title: 'Active Work Orders',
+          subtitle: 'As of ' + data.asOf,
+          asOf: data.asOf,
+          items: data.active,
+          type: 'active'
+        });
+
+        renderChart(screen2, {
+          title: 'Completed Work Orders',
+          subtitle: 'MTD &bull; As of ' + data.asOf,
+          asOf: data.asOf,
+          items: data.completedMTD,
+          type: 'completed'
+        });
+
+        startChart(screen1, INITIAL_DELAY);
+
+        setTimeout(function () {
+          screen1.className = 'chart-screen active-screen fade-out';
+        }, INITIAL_DELAY + FADE_START);
+
+        setTimeout(function () {
+          screen1.className = 'chart-screen';
+          startChart(screen2);
+        }, INITIAL_DELAY + CHART_DURATION);
+
+        setTimeout(function () {
+          screen2.className = 'chart-screen active-screen fade-out';
+        }, INITIAL_DELAY + CHART_DURATION + FADE_START);
+
+        setTimeout(function () {
+          freezeChart(screen2);
+        }, FINAL_FREEZE);
+      }
+
+      function loadJson() {
+        var xhr;
+        try {
+          xhr = new XMLHttpRequest();
+          xhr.onreadystatechange = function () {
+            var data;
+            if (xhr.readyState === 4) {
+              if ((xhr.status >= 200 && xhr.status < 300) || xhr.status === 0) {
+                try {
+                  if (xhr.responseText && xhr.responseText.length > 0) {
+                    data = JSON.parse(xhr.responseText);
+                    init(data);
+                  } else {
+                    init(fallbackData);
+                  }
+                } catch (e) {
+                  init(fallbackData);
+                }
+              } else {
+                init(fallbackData);
+              }
+            }
+          };
+          xhr.open('GET', 'data.json', true);
+          xhr.send(null);
+        } catch (e2) {
+          init(fallbackData);
+        }
+      }
+
+      if (window.JSON && document.getElementById) {
+        loadJson();
+      } else {
+        showError('This browser is too old to display the dashboard.');
+      }
+    }());
+  </script>
+</body>
+</html>
