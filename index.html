@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -18,235 +19,238 @@
       font-family: 'Archivo', Arial, Helvetica, sans-serif;
     }
 
-    body {
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      text-rendering: geometricPrecision;
-    }
+```
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
+}
 
-    #stage {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      min-width: 320px;
-      min-height: 240px;
-      background: #000000;
-    }
+#stage {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  min-width: 320px;
+  min-height: 240px;
+  background: #000000;
+}
 
-    .chart-screen {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      display: none;
-      background: #000000;
-    }
+.chart-screen {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  display: none;
+  background: #000000;
+}
 
-    .chart-screen.active-screen {
-      display: block;
-      opacity: 1;
-    }
+.chart-screen.active-screen {
+  display: block;
+  opacity: 1;
+}
 
-    .chart-screen.fade-out {
-      opacity: 0;
-      transition: opacity 400ms linear;
-    }
+.chart-screen.fade-out {
+  opacity: 0;
+  transition: opacity 400ms linear;
+}
 
-    .header {
-      position: absolute;
-      left: 0;
-      top: 2.2vh;
-      width: 100%;
-      text-align: center;
-      z-index: 2;
-    }
+.header {
+  position: absolute;
+  left: 0;
+  top: 2.2vh;
+  width: 100%;
+  text-align: center;
+  z-index: 2;
+}
 
-    .title {
-      margin: 0;
-      padding: 0;
-      font-size: 5.45vw;
-      line-height: 0.95;
-      font-weight: 900;
-      letter-spacing: -0.045em;
-      color: #f8f8f8;
-      text-shadow: 0 0 1px rgba(255,255,255,0.35);
-    }
+.title {
+  margin: 0;
+  padding: 0;
+  font-size: 5.45vw;
+  line-height: 0.95;
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  color: #f8f8f8;
+  text-shadow: 0 0 1px rgba(255,255,255,0.35);
+}
 
-    .subtitle {
-      margin-top: 1.0vh;
-      font-size: 2.05vw;
-      line-height: 1;
-      font-weight: 800;
-      letter-spacing: -0.025em;
-      color: #bcbcbc;
-    }
+.subtitle {
+  margin-top: 1.0vh;
+  font-size: 2.05vw;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: #bcbcbc;
+}
 
-    .plot {
-      position: absolute;
-      left: 3.3vw;
-      right: 4.3vw;
-      top: 15.2vh;
-      bottom: 8.4vh;
-    }
+.plot {
+  position: absolute;
+  left: 3.3vw;
+  right: 4.3vw;
+  top: 15.2vh;
+  bottom: 8.4vh;
+}
 
-    .rows {
-      position: absolute;
-      left: 0;
-      top: 0;
-      right: 0;
-      bottom: 4.8vh;
-      overflow: hidden;
-    }
+.rows {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 4.8vh;
+  overflow: hidden;
+}
 
-    .row {
-      position: relative;
-      width: 100%;
-    }
+.row {
+  position: relative;
+  width: 100%;
+}
 
-    .name {
-      position: absolute;
-      left: 0;
-      top: 50%;
-      width: 12.7vw;
-      margin-top: -1.13vw;
-      text-align: right;
-      font-size: 2.12vw;
-      line-height: 2.28vw;
-      font-weight: 900;
-      letter-spacing: -0.035em;
-      color: #fafafa;
-      white-space: nowrap;
-      overflow: visible;
-      text-overflow: clip;
-    }
+.name {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 12.7vw;
+  margin-top: -1.13vw;
+  text-align: right;
+  font-size: 2.12vw;
+  line-height: 2.28vw;
+  font-weight: 900;
+  letter-spacing: -0.035em;
+  color: #fafafa;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+}
 
-    .bar-area {
-      position: absolute;
-      left: 15.0vw;
-      right: 3.8vw;
-      top: 50%;
-      height: 3.95vh;
-      margin-top: -1.975vh;
-    }
+.bar-area {
+  position: absolute;
+  left: 15.0vw;
+  right: 3.8vw;
+  top: 50%;
+  height: 3.95vh;
+  margin-top: -1.975vh;
+}
 
-    .bar-shell {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      overflow: visible;
-    }
+.bar-shell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
 
-    .bar {
-      position: absolute;
-      left: 0;
-      top: 0;
-      height: 100%;
-      width: 0;
-      min-width: 0;
-      background: #777777;
-      border-radius: 0 2px 2px 0;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
-      transition-property: width;
-      transition-duration: 8000ms;
-      transition-timing-function: cubic-bezier(0.08, 0.82, 0.18, 1);
-    }
+.bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0;
+  min-width: 0;
+  background: #777777;
+  border-radius: 0 2px 2px 0;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+  transition-property: width;
+  transition-duration: 8000ms;
+  transition-timing-function: cubic-bezier(0.08, 0.82, 0.18, 1);
+}
 
-    .value {
-      position: absolute;
-      top: 50%;
-      margin-top: -1.48vw;
-      margin-left: 1.0vw;
-      font-size: 2.72vw;
-      line-height: 2.95vw;
-      font-weight: 900;
-      letter-spacing: -0.045em;
-      color: #ffffff;
-      opacity: 0;
-      transform: scale(0.7);
-      -webkit-transform: scale(0.7);
-      text-shadow: 0 0 1px rgba(255,255,255,0.35);
-      transition-property: opacity, transform, -webkit-transform;
-      transition-duration: 240ms;
-      transition-timing-function: cubic-bezier(0.20, 1.20, 0.25, 1);
-      white-space: nowrap;
-    }
+.value {
+  position: absolute;
+  top: 50%;
+  margin-top: -1.48vw;
+  margin-left: 1.0vw;
+  font-size: 2.72vw;
+  line-height: 2.95vw;
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  color: #ffffff;
+  opacity: 0;
+  transform: scale(0.7);
+  -webkit-transform: scale(0.7);
+  text-shadow: 0 0 1px rgba(255,255,255,0.35);
+  transition-property: opacity, transform, -webkit-transform;
+  transition-duration: 240ms;
+  transition-timing-function: cubic-bezier(0.20, 1.20, 0.25, 1);
+  white-space: nowrap;
+}
 
-    .value.visible {
-      opacity: 1;
-      transform: scale(1);
-      -webkit-transform: scale(1);
-    }
+.value.visible {
+  opacity: 1;
+  transform: scale(1);
+  -webkit-transform: scale(1);
+}
 
-    .axis {
-      position: absolute;
-      left: 15.0vw;
-      right: 0;
-      bottom: 0;
-      height: 3.8vh;
-      border-top: 2px solid #dedede;
-    }
+.axis {
+  position: absolute;
+  left: 15.0vw;
+  right: 0;
+  bottom: 0;
+  height: 3.8vh;
+  border-top: 2px solid #dedede;
+}
 
-    .tick {
-      position: absolute;
-      top: -2px;
-      height: 100%;
-      width: 1px;
-    }
+.tick {
+  position: absolute;
+  top: -2px;
+  height: 100%;
+  width: 1px;
+}
 
-    .tick-mark {
-      position: absolute;
-      left: 0;
-      top: -0.9vh;
-      width: 2px;
-      height: 1.2vh;
-      background: #dedede;
-    }
+.tick-mark {
+  position: absolute;
+  left: 0;
+  top: -0.9vh;
+  width: 2px;
+  height: 1.2vh;
+  background: #dedede;
+}
 
-    .tick-label {
-      position: absolute;
-      left: -1.0vw;
-      top: 1.25vh;
-      width: 2.0vw;
-      text-align: center;
-      color: #f7f7f7;
-      font-size: 1.72vw;
-      line-height: 1.72vw;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      text-shadow: 0 0 1px rgba(255,255,255,0.3);
-    }
+.tick-label {
+  position: absolute;
+  left: -1.0vw;
+  top: 1.25vh;
+  width: 2.0vw;
+  text-align: center;
+  color: #f7f7f7;
+  font-size: 1.72vw;
+  line-height: 1.72vw;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  text-shadow: 0 0 1px rgba(255,255,255,0.3);
+}
 
-    .last-updated {
-      position: absolute;
-      right: 1.7vw;
-      bottom: 1.15vh;
-      font-size: 1.0vw;
-      line-height: 1.1vw;
-      color: #777777;
-      font-weight: 700;
-      letter-spacing: 0.01em;
-      opacity: 0.75;
-    }
+.last-updated {
+  position: absolute;
+  right: 1.7vw;
+  bottom: 1.15vh;
+  font-size: 1.0vw;
+  line-height: 1.1vw;
+  color: #777777;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  opacity: 0.75;
+}
 
-    .error {
-      position: absolute;
-      left: 5vw;
-      right: 5vw;
-      top: 45vh;
-      text-align: left;
-      font-size: 2.2vw;
-      line-height: 1.35;
-      font-weight: 800;
-      color: #ffffff;
-    }
+.error {
+  position: absolute;
+  left: 5vw;
+  right: 5vw;
+  top: 45vh;
+  text-align: left;
+  font-size: 2.2vw;
+  line-height: 1.35;
+  font-weight: 800;
+  color: #ffffff;
+}
 
-    @media screen and (max-aspect-ratio: 16/9) {
-      .title { font-size: 5.1vw; }
-      .subtitle { font-size: 1.95vw; }
-      .name { font-size: 2.0vw; }
-    }
+@media screen and (max-aspect-ratio: 16/9) {
+  .title { font-size: 5.1vw; }
+  .subtitle { font-size: 1.95vw; }
+  .name { font-size: 2.0vw; }
+}
+```
+
   </style>
 </head>
 <body>
@@ -257,13 +261,12 @@
 
   <script>
     (function () {
-      var INITIAL_DELAY = 5000;
       var CHART_DURATION = 20000;
       var BAR_GROW = 8000;
       var NUMBERS_START = 8000;
       var NUMBERS_TOTAL = 1500;
       var FADE_START = 19600;
-      var FINAL_FREEZE = INITIAL_DELAY + 40000;
+      var FINAL_FREEZE = 40000;
 
       var fallbackData = {
         "asOf": "4/26/26",
@@ -336,10 +339,8 @@
 
       function niceAxisMax(maxValue) {
         if (maxValue <= 10) { return 10; }
-        if (maxValue <= 25) { return 25; }
-        if (maxValue <= 50) { return 50; }
-        if (maxValue <= 70) { return 70; }
-        if (maxValue <= 100) { return 100; }
+        if (maxValue <= 30) { return Math.ceil(maxValue / 5) * 5; }
+        if (maxValue <= 100) { return Math.ceil(maxValue / 10) * 10; }
         return Math.ceil(maxValue / 20) * 20;
       }
 
@@ -347,9 +348,9 @@
         var ticks = [];
         var step;
         var i;
-        if (axisMax <= 25) {
+        if (axisMax <= 30) {
           step = 5;
-        } else if (axisMax <= 70) {
+        } else if (axisMax <= 100) {
           step = 10;
         } else {
           step = 20;
@@ -514,11 +515,10 @@
         }
       }
 
-      function startChart(screen, delayStart) {
+      function startChart(screen) {
         var bars;
         var values;
         var i;
-        var delayBase = Number(delayStart) || 0;
         screen.className = 'chart-screen active-screen';
         resetChart(screen);
         bars = screen.getElementsByClassName('bar');
@@ -528,10 +528,10 @@
           for (j = 0; j < bars.length; j += 1) {
             bars[j].style.width = bars[j].getAttribute('data-width');
           }
-        }, delayBase + 50);
+        }, 50);
         for (i = 0; i < values.length; i += 1) {
           (function (idx) {
-            var delay = delayBase + NUMBERS_START + Math.round((NUMBERS_TOTAL / Math.max(1, values.length - 1)) * idx);
+            var delay = NUMBERS_START + Math.round((NUMBERS_TOTAL / Math.max(1, values.length - 1)) * idx);
             setTimeout(function () {
               values[idx].className = 'value visible';
             }, delay);
@@ -590,20 +590,20 @@
           type: 'completed'
         });
 
-        startChart(screen1, INITIAL_DELAY);
+        startChart(screen1);
 
         setTimeout(function () {
           screen1.className = 'chart-screen active-screen fade-out';
-        }, INITIAL_DELAY + FADE_START);
+        }, FADE_START);
 
         setTimeout(function () {
           screen1.className = 'chart-screen';
           startChart(screen2);
-        }, INITIAL_DELAY + CHART_DURATION);
+        }, CHART_DURATION);
 
         setTimeout(function () {
           screen2.className = 'chart-screen active-screen fade-out';
-        }, INITIAL_DELAY + CHART_DURATION + FADE_START);
+        }, CHART_DURATION + FADE_START);
 
         setTimeout(function () {
           freezeChart(screen2);
@@ -647,5 +647,6 @@
       }
     }());
   </script>
+
 </body>
 </html>
