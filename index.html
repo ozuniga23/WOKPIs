@@ -20,233 +20,233 @@
     }
 
 body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: geometricPrecision;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+text-rendering: geometricPrecision;
 }
 
 #stage {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  min-width: 320px;
-  min-height: 240px;
-  background: #000000;
+position: relative;
+width: 100vw;
+height: 100vh;
+min-width: 320px;
+min-height: 240px;
+background: #000000;
 }
 
 .chart-screen {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  display: none;
-  background: #000000;
+position: absolute;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+opacity: 0;
+display: none;
+background: #000000;
 }
 
 .chart-screen.active-screen {
-  display: block;
-  opacity: 1;
+display: block;
+opacity: 1;
 }
 
 .chart-screen.fade-out {
-  opacity: 0;
-  transition: opacity 400ms linear;
+opacity: 0;
+transition: opacity 400ms linear;
 }
 
 .header {
-  position: absolute;
-  left: 0;
-  top: 2.2vh;
-  width: 100%;
-  text-align: center;
-  z-index: 2;
+position: absolute;
+left: 0;
+top: 2.2vh;
+width: 100%;
+text-align: center;
+z-index: 2;
 }
 
 .title {
-  margin: 0;
-  padding: 0;
-  font-size: 5.45vw;
-  line-height: 0.95;
-  font-weight: 900;
-  letter-spacing: -0.045em;
-  color: #f8f8f8;
-  text-shadow: 0 0 1px rgba(255,255,255,0.35);
+margin: 0;
+padding: 0;
+font-size: 5.45vw;
+line-height: 0.95;
+font-weight: 900;
+letter-spacing: -0.045em;
+color: #f8f8f8;
+text-shadow: 0 0 1px rgba(255,255,255,0.35);
 }
 
 .subtitle {
-  margin-top: 1.0vh;
-  font-size: 2.05vw;
-  line-height: 1;
-  font-weight: 800;
-  letter-spacing: -0.025em;
-  color: #bcbcbc;
+margin-top: 1.0vh;
+font-size: 2.05vw;
+line-height: 1;
+font-weight: 800;
+letter-spacing: -0.025em;
+color: #bcbcbc;
 }
 
 .plot {
-  position: absolute;
-  left: 3.3vw;
-  right: 4.3vw;
-  top: 15.2vh;
-  bottom: 8.4vh;
+position: absolute;
+left: 3.3vw;
+right: 4.3vw;
+top: 19vh;
+bottom: 8.4vh;
 }
 
 .rows {
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 4.8vh;
-  overflow: hidden;
+position: absolute;
+left: 0;
+top: 0;
+right: 0;
+bottom: 4.8vh;
+overflow: hidden;
 }
 
 .row {
-  position: relative;
-  width: 100%;
+position: relative;
+width: 100%;
 }
 
 .name {
-  position: absolute;
-  left: 0;
-  top: 50%;
-  width: 12.7vw;
-  margin-top: -1.13vw;
-  text-align: right;
-  font-size: 2.12vw;
-  line-height: 2.28vw;
-  font-weight: 900;
-  letter-spacing: -0.035em;
-  color: #fafafa;
-  white-space: nowrap;
-  overflow: visible;
-  text-overflow: clip;
+position: absolute;
+left: 0;
+top: 50%;
+width: 12.7vw;
+margin-top: -1.13vw;
+text-align: right;
+font-size: 2.12vw;
+line-height: 2.28vw;
+font-weight: 900;
+letter-spacing: -0.035em;
+color: #fafafa;
+white-space: nowrap;
+overflow: visible;
+text-overflow: clip;
 }
 
 .bar-area {
-  position: absolute;
-  left: 15.0vw;
-  right: 3.8vw;
-  top: 50%;
-  height: 3.95vh;
-  margin-top: -1.975vh;
+position: absolute;
+left: 15.0vw;
+right: 3.8vw;
+top: 50%;
+height: 3.95vh;
+margin-top: -1.975vh;
 }
 
 .bar-shell {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
+position: relative;
+width: 100%;
+height: 100%;
+overflow: visible;
 }
 
 .bar {
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 0;
-  min-width: 0;
-  background: #777777;
-  border-radius: 0 2px 2px 0;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
-  transition-property: width;
-  transition-duration: 8000ms;
-  transition-timing-function: cubic-bezier(0.08, 0.82, 0.18, 1);
+position: absolute;
+left: 0;
+top: 0;
+height: 100%;
+width: 0;
+min-width: 0;
+background: #777777;
+border-radius: 0 2px 2px 0;
+box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+transition-property: width;
+transition-duration: 8000ms;
+transition-timing-function: cubic-bezier(0.08, 0.82, 0.18, 1);
 }
 
 .value {
-  position: absolute;
-  top: 50%;
-  margin-top: -1.48vw;
-  margin-left: 1.0vw;
-  font-size: 2.72vw;
-  line-height: 2.95vw;
-  font-weight: 900;
-  letter-spacing: -0.045em;
-  color: #ffffff;
-  opacity: 0;
-  transform: scale(0.7);
-  -webkit-transform: scale(0.7);
-  text-shadow: 0 0 1px rgba(255,255,255,0.35);
-  transition-property: opacity, transform, -webkit-transform;
-  transition-duration: 240ms;
-  transition-timing-function: cubic-bezier(0.20, 1.20, 0.25, 1);
-  white-space: nowrap;
+position: absolute;
+top: 50%;
+margin-top: -1.48vw;
+margin-left: 1.0vw;
+font-size: 2.72vw;
+line-height: 2.95vw;
+font-weight: 900;
+letter-spacing: -0.045em;
+color: #ffffff;
+opacity: 0;
+transform: scale(0.7);
+-webkit-transform: scale(0.7);
+text-shadow: 0 0 1px rgba(255,255,255,0.35);
+transition-property: opacity, transform, -webkit-transform;
+transition-duration: 240ms;
+transition-timing-function: cubic-bezier(0.20, 1.20, 0.25, 1);
+white-space: nowrap;
 }
 
 .value.visible {
-  opacity: 1;
-  transform: scale(1);
-  -webkit-transform: scale(1);
+opacity: 1;
+transform: scale(1);
+-webkit-transform: scale(1);
 }
 
 .axis {
-  position: absolute;
-  left: 15.0vw;
-  right: 0;
-  bottom: 0;
-  height: 3.8vh;
-  border-top: 2px solid #dedede;
+position: absolute;
+left: 15.0vw;
+right: 0;
+bottom: 0;
+height: 3.8vh;
+border-top: 2px solid #dedede;
 }
 
 .tick {
-  position: absolute;
-  top: -2px;
-  height: 100%;
-  width: 1px;
+position: absolute;
+top: -2px;
+height: 100%;
+width: 1px;
 }
 
 .tick-mark {
-  position: absolute;
-  left: 0;
-  top: -0.9vh;
-  width: 2px;
-  height: 1.2vh;
-  background: #dedede;
+position: absolute;
+left: 0;
+top: -0.9vh;
+width: 2px;
+height: 1.2vh;
+background: #dedede;
 }
 
 .tick-label {
-  position: absolute;
-  left: -1.0vw;
-  top: 1.25vh;
-  width: 2.0vw;
-  text-align: center;
-  color: #f7f7f7;
-  font-size: 1.72vw;
-  line-height: 1.72vw;
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  text-shadow: 0 0 1px rgba(255,255,255,0.3);
+position: absolute;
+left: -1.0vw;
+top: 1.25vh;
+width: 2.0vw;
+text-align: center;
+color: #f7f7f7;
+font-size: 1.72vw;
+line-height: 1.72vw;
+font-weight: 900;
+letter-spacing: -0.04em;
+text-shadow: 0 0 1px rgba(255,255,255,0.3);
 }
 
 .last-updated {
-  position: absolute;
-  right: 1.7vw;
-  bottom: 1.15vh;
-  font-size: 1.0vw;
-  line-height: 1.1vw;
-  color: #777777;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  opacity: 0.75;
+position: absolute;
+right: 1.7vw;
+bottom: 1.15vh;
+font-size: 1.0vw;
+line-height: 1.1vw;
+color: #777777;
+font-weight: 700;
+letter-spacing: 0.01em;
+opacity: 0.75;
 }
 
 .error {
-  position: absolute;
-  left: 5vw;
-  right: 5vw;
-  top: 45vh;
-  text-align: left;
-  font-size: 2.2vw;
-  line-height: 1.35;
-  font-weight: 800;
-  color: #ffffff;
+position: absolute;
+left: 5vw;
+right: 5vw;
+top: 45vh;
+text-align: left;
+font-size: 2.2vw;
+line-height: 1.35;
+font-weight: 800;
+color: #ffffff;
 }
 
 @media screen and (max-aspect-ratio: 16/9) {
-  .title { font-size: 5.1vw; }
-  .subtitle { font-size: 1.95vw; }
-  .name { font-size: 2.0vw; }
+.title { font-size: 5.1vw; }
+.subtitle { font-size: 1.95vw; }
+.name { font-size: 2.0vw; }
 }
 
   </style>
