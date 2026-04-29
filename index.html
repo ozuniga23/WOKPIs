@@ -19,7 +19,6 @@
       font-family: 'Archivo', Arial, Helvetica, sans-serif;
     }
 
-```
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -249,7 +248,6 @@ body {
   .subtitle { font-size: 1.95vw; }
   .name { font-size: 2.0vw; }
 }
-```
 
   </style>
 </head>
@@ -338,10 +336,10 @@ body {
       }
 
       function niceAxisMax(maxValue) {
-        if (maxValue <= 10) { return 10; }
-        if (maxValue <= 30) { return Math.ceil(maxValue / 5) * 5; }
-        if (maxValue <= 100) { return Math.ceil(maxValue / 10) * 10; }
-        return Math.ceil(maxValue / 20) * 20;
+        if (maxValue < 10) { return 10; }
+        if (maxValue < 30) { return Math.floor(maxValue / 5) * 5 + 5; }
+        if (maxValue < 100) { return Math.floor(maxValue / 10) * 10 + 10; }
+        return Math.floor(maxValue / 20) * 20 + 20;
       }
 
       function axisTicks(axisMax) {
