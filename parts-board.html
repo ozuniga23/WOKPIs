@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Parts Requests</title>
+<style>
+  /* ============================================================
+     INDUSTRIAL CONTROL-ROOM THEME
+     - No web fonts / no CDN on purpose (reliable on old signage WebView)
+     - Class-based, low specificity, no !important
+     ============================================================ */
+  :root{
+    --bg:#0a0d12;
+    --bg2:#0e1219;
+    --panel:#121823;
+    --line:#1d2733;
+    --line2:#283443;
+    --text:#e8eef5;
+    --muted:#8a98a8;
+    --accent:#ffb000;          /* safety amber */
+    --accent-dim:#7a5400;
+
+    /* semantic */
+    --red:#ef4444;   --red-bg:rgba(239,68,68,0.16);   --red-bd:rgba(239,68,68,0.45);
+    --orange:#f97316;--orange-bg:rgba(249,115,22,0.16);--orange-bd:rgba(249,115,22,0.45);
+    --amber:#f59e0b; --amber-bg:rgba(245,158,11,0.16); --amber-bd:rgba(245,158,11,0.45);
+    --green:#22c55e; --green-bg:rgba(34,197,94,0.16);  --green-bd:rgba(34,197,94,0.45);
+    --blue:#3b82f6;  --blue-bg:rgba(59,130,246,0.16);  --blue-bd:rgba(59,130,246,0.45);
+    --slate:#64748b; --slate-bg:rgba(100,116,139,0.16);--slate-bd:rgba(100,116,139,0.45);
+  }
+
+  html{font-size:18px;}
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    background:
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 48px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 48px),
+      radial-gradient(120% 80% at 50% -10%, var(--bg2), var(--bg) 60%);
+    color:var(--text);
+    font-family:"Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{height:100%;display:flex;flex-direction:column;padding:22px 26px 16px;}
+
+  /* ---- Header ---- */
+  .head{display:flex;align-items:flex-end;justify-content:space-between;
+    border-bottom:2px solid var(--line2);padding-bottom:14px;margin-bottom:10px;}
+  .brand{display:flex;align-items:center;gap:16px;}
+  .tag{width:10px;height:46px;background:var(--accent);box-shadow:0 0 18px rgba(255,176,0,0.5);border-radius:2px;}
+  .title{font-size:2.05rem;font-weight:800;letter-spacing:0.06em;line-height:1;}
+  .subtitle{font-size:0.8rem;letter-spacing:0.32em;color:var(--muted);text-transform:uppercase;margin-top:6px;}
+  .meta{text-align:right;line-height:1.35;}
+  .count{font-size:1.9rem;font-weight:800;color:var(--accent);line-height:1;}
+  .count small{font-size:0.75rem;letter-spacing:0.28em;color:var(--muted);display:block;text-transform:uppercase;margin-top:6px;}
+  .clock{font-variant-numeric:tabular-nums;font-size:1.05rem;color:var(--text);margin-top:10px;}
+  .stamp{font-size:0.78rem;color:var(--muted);margin-top:3px;display:flex;align-items:center;gap:8px;justify-content:flex-end;}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);}
+  .dot.stale{background:var(--amber);box-shadow:0 0 8px var(--amber);}
+  .dot.down{background:var(--red);box-shadow:0 0 8px var(--red);}
+
+  /* ---- Board ---- */
+  .board{flex:1;min-height:0;overflow:hidden;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;}
+  thead th{
+    text-align:left;font-size:0.82rem;letter-spacing:0.18em;text-transform:uppercase;
+    color:var(--muted);font-weight:700;padding:10px 14px;border-bottom:1px solid var(--line2);
+  }
+  tbody td{
+    padding:13px 14px;border-bottom:1px solid var(--line);font-size:1.4rem;vertical-align:middle;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  tbody tr:nth-child(even){background:rgba(255,255,255,0.018);}
+
+  /* column widths */
+  .c-wo{width:11%;}
+  .c-parts{width:34%;white-space:normal;line-height:1.25;}
+  .c-prio{width:12%;}
+  .c-tech{width:15%;}
+  .c-wait{width:11%;}
+  .c-status{width:9%;}
+  .c-eta{width:8%;}
+
+  .wo{font-family:"Roboto Mono","Consolas","SF Mono",Menlo,monospace;font-weight:700;color:#fff;letter-spacing:0.02em;}
+  .tech{color:var(--text);}
+  .eta{color:var(--muted);font-variant-numeric:tabular-nums;}
+
+  /* ---- Pills ---- */
+  .pill{display:inline-block;padding:5px 13px;border-radius:6px;font-size:1.02rem;font-weight:700;
+    letter-spacing:0.03em;border:1px solid transparent;line-height:1.15;}
+
+  .p-crit  {color:var(--red);    background:var(--red-bg);    border-color:var(--red-bd);}
+  .p-high  {color:var(--orange); background:var(--orange-bg); border-color:var(--orange-bd);}
+  .p-med   {color:var(--amber);  background:var(--amber-bg);  border-color:var(--amber-bd);}
+  .p-low   {color:var(--green);  background:var(--green-bg);  border-color:var(--green-bd);}
+  .p-defer {color:var(--slate);  background:var(--slate-bg);  border-color:var(--slate-bd);}
+  .p-none  {color:var(--muted);  background:rgba(255,255,255,0.05); border-color:var(--line2);}
+
+  .w-ok    {color:var(--green);  background:var(--green-bg);  border-color:var(--green-bd);}
+  .w-due   {color:var(--amber);  background:var(--amber-bg);  border-color:var(--amber-bd);}
+  .w-late  {color:#fff; background:var(--red); border-color:var(--red); box-shadow:0 0 0 0 rgba(239,68,68,0.6); animation:pulse 1.8s ease-out infinite;}
+  .w-none  {color:var(--muted);  background:rgba(255,255,255,0.05); border-color:var(--line2);}
+
+  .s-new      {color:var(--blue);  background:var(--blue-bg);  border-color:var(--blue-bd);}
+  .s-ordered  {color:var(--amber); background:var(--amber-bg); border-color:var(--amber-bd);}
+  .s-delivered{color:var(--green); background:var(--green-bg); border-color:var(--green-bd);}
+  .s-cancelled{color:var(--slate); background:var(--slate-bg); border-color:var(--slate-bd);}
+  .s-none     {color:var(--muted); background:rgba(255,255,255,0.05); border-color:var(--line2);}
+
+  @keyframes pulse{
+    0%  {box-shadow:0 0 0 0 rgba(239,68,68,0.55);}
+    70% {box-shadow:0 0 0 12px rgba(239,68,68,0);}
+    100%{box-shadow:0 0 0 0 rgba(239,68,68,0);}
+  }
+
+  tbody tr{animation:fadein 0.4s ease;}
+  @keyframes fadein{from{opacity:0;}to{opacity:1;}}
+
+  /* ---- States ---- */
+  .center{display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;gap:14px;text-align:center;}
+  .center .big{font-size:2rem;font-weight:800;color:var(--muted);letter-spacing:0.04em;}
+  .center .sub{font-size:1rem;color:var(--muted);max-width:680px;line-height:1.5;}
+  .center .sub code{background:var(--panel);padding:2px 8px;border-radius:4px;color:var(--accent);
+    font-family:monospace;border:1px solid var(--line2);}
+
+  /* ---- Footer ---- */
+  .foot{display:flex;justify-content:space-between;align-items:center;color:var(--muted);
+    font-size:0.74rem;letter-spacing:0.14em;text-transform:uppercase;padding-top:8px;}
+  .pager{display:flex;gap:7px;align-items:center;}
+  .pg{width:9px;height:9px;border-radius:50%;background:var(--line2);}
+  .pg.on{background:var(--accent);box-shadow:0 0 7px var(--accent);}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="head">
+      <div class="brand">
+        <div class="tag"></div>
+        <div>
+          <div class="title">PARTS REQUESTS</div>
+          <div class="subtitle">Maintenance &middot; Live Board</div>
+        </div>
+      </div>
+      <div class="meta">
+        <div class="count"><span id="count">0</span><small>Active</small></div>
+        <div class="clock" id="clock">--:--</div>
+        <div class="stamp"><span class="dot" id="dot"></span><span id="stamp">Loading&hellip;</span></div>
+      </div>
+    </div>
+
+    <div class="board" id="board"></div>
+
+    <div class="foot">
+      <div id="footnote">Source: Fiix &rarr; Tracker &middot; Auto-refresh</div>
+      <div class="pager" id="pager"></div>
+    </div>
+  </div>
+
+<script>
+/* =====================================================================
+   CONFIG  --  edit these
+   ===================================================================== */
+
+/* 1) The published-CSV URL of your TV tab.
+      Sheet -> Share -> Publish to web -> pick the "TV" sheet -> CSV -> copy link.
+      It looks like:
+      https://docs.google.com/spreadsheets/d/e/2PACX-xxxxxxxx/pub?gid=123456&single=true&output=csv
+
+      FALLBACK if your player ever blocks the fetch (CORS): turn on link sharing
+      ("Anyone with the link: Viewer") and use the gviz endpoint instead, which has
+      rock-solid CORS and reads slightly fresher than publish-to-web:
+      https://docs.google.com/spreadsheets/d/SHEET_ID/gviz/tq?tqx=out:csv&gid=TV_TAB_GID
+*/
+var CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRgOws5gWITuUP220CD79ZYAWnj7Rzl52Z0w_LT4RiR573TfOeHqt44Sf3AwdkE3y26c1FFPn_Em2vZ/pub?gid=603035265&single=true&output=csv";
+
+var REFRESH_SECONDS    = 60;   /* how often to re-pull the sheet            */
+var ROWS_PER_PAGE      = 11;   /* rows shown at once; extra rows auto-cycle. set huge (999) to disable paging */
+var PAGE_SECONDS       = 14;   /* seconds each page is shown when cycling    */
+var HARD_RELOAD_MINUTES= 0;    /* 0 = off. Set e.g. 360 for a full reload every 6h (memory hygiene on old players) */
+
+/* Column order in the TV tab (0-based). Change only if you reorder the tab. */
+var COL = { WO:0, PARTS:1, PRIORITY:2, TECH:3, WAITING:4, STATUS:5, ETA:6 };
+
+/* =====================================================================
+   STATE
+   ===================================================================== */
+var lastRows = [];
+var currentPage = 0;
+var lastOk = 0;          /* timestamp of last successful fetch */
+var fetchFailed = false;
+var configMissing = (CSV_URL.indexOf("PASTE_") === 0 || CSV_URL === "");
+
+/* =====================================================================
+   CSV PARSER  (handles quotes, embedded commas/newlines, "" escapes)
+   ===================================================================== */
+function parseCSV(text){
+  var rows=[], row=[], field="", inQ=false, i, c, n;
+  for(i=0;i<text.length;i++){
+    c=text.charAt(i);
+    if(inQ){
+      if(c==='"'){
+        if(text.charAt(i+1)==='"'){ field+='"'; i++; }
+        else { inQ=false; }
+      } else { field+=c; }
+    } else {
+      if(c==='"'){ inQ=true; }
+      else if(c===','){ row.push(field); field=""; }
+      else if(c==='\n'){ row.push(field); rows.push(row); row=[]; field=""; }
+      else if(c==='\r'){
+        n=text.charAt(i+1);
+        if(n!=='\n'){ row.push(field); rows.push(row); row=[]; field=""; }
+      }
+      else { field+=c; }
+    }
+  }
+  row.push(field);
+  if(!(row.length===1 && row[0]==="" && rows.length>0)){ rows.push(row); }
+  return rows;
+}
+
+/* =====================================================================
+   HELPERS
+   ===================================================================== */
+function esc(s){
+  s = (s===null||s===undefined) ? "" : String(s);
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+function cell(row,idx){ return (row && row[idx]!==undefined && row[idx]!==null) ? String(row[idx]).trim() : ""; }
+
+function priorityClass(v){
+  var s=String(v||"").toLowerCase();
+  if(s.indexOf("crit")>=0||s.indexOf("emerg")>=0||s.indexOf("urgent")>=0||s==="1") return "p-crit";
+  if(s.indexOf("high")>=0||s==="2") return "p-high";
+  if(s.indexOf("med")>=0||s.indexOf("norm")>=0||s==="3") return "p-med";
+  if(s.indexOf("low")>=0||s==="4") return "p-low";
+  if(s.indexOf("defer")>=0||s.indexOf("plan")>=0||s==="5") return "p-defer";
+  return "p-none";
+}
+function waitingClass(v){
+  var s=String(v||"").trim().toUpperCase();
+  if(s.indexOf("LATE")===0) return "w-late";
+  if(s.indexOf("DUE")===0)  return "w-due";
+  if(s.indexOf("OK")===0)   return "w-ok";
+  return "w-none";
+}
+function statusClass(v){
+  var s=String(v||"").trim().toLowerCase();
+  if(s==="new") return "s-new";
+  if(s==="ordered") return "s-ordered";
+  if(s==="delivered") return "s-delivered";
+  if(s==="cancelled"||s==="canceled") return "s-cancelled";
+  return "s-none";
+}
+function pad(n){ return n<10 ? "0"+n : ""+n; }
+
+/* =====================================================================
+   RENDER
+   ===================================================================== */
+function renderSetup(){
+  document.getElementById("board").innerHTML =
+    '<div class="center">'
+    + '<div class="big">Set the data source</div>'
+    + '<div class="sub">Open this file and set <code>CSV_URL</code> to your TV tab&rsquo;s '
+    + 'published-CSV link (Sheet &rarr; Share &rarr; Publish to web &rarr; CSV).</div>'
+    + '</div>';
+  document.getElementById("count").textContent = "0";
+}
+
+function renderEmpty(){
+  document.getElementById("board").innerHTML =
+    '<div class="center"><div class="big">No active parts requests</div>'
+    + '<div class="sub">New and Ordered requests will appear here automatically.</div></div>';
+}
+
+function renderPage(){
+  var board=document.getElementById("board");
+  var total=lastRows.length;
+
+  if(total===0){ renderEmpty(); renderPager(0,0); return; }
+
+  var pages = Math.ceil(total / ROWS_PER_PAGE);
+  if(currentPage >= pages){ currentPage = 0; }
+  var start = currentPage * ROWS_PER_PAGE;
+  var slice = lastRows.slice(start, start + ROWS_PER_PAGE);
+
+  var html =
+    '<table><thead><tr>'
+    + '<th class="c-wo">WO #</th>'
+    + '<th class="c-parts">Parts Needed</th>'
+    + '<th class="c-prio">Priority</th>'
+    + '<th class="c-tech">Technician</th>'
+    + '<th class="c-wait">Waiting</th>'
+    + '<th class="c-status">Status</th>'
+    + '<th class="c-eta">ETA</th>'
+    + '</tr></thead><tbody>';
+
+  var i, r, prio, wait, stat;
+  for(i=0;i<slice.length;i++){
+    r=slice[i];
+    prio=cell(r,COL.PRIORITY);
+    wait=cell(r,COL.WAITING);
+    stat=cell(r,COL.STATUS);
+    html +=
+      '<tr>'
+      + '<td class="c-wo"><span class="wo">'+esc(cell(r,COL.WO))+'</span></td>'
+      + '<td class="c-parts">'+esc(cell(r,COL.PARTS))+'</td>'
+      + '<td class="c-prio">'+(prio?'<span class="pill '+priorityClass(prio)+'">'+esc(prio)+'</span>':'')+'</td>'
+      + '<td class="c-tech tech">'+esc(cell(r,COL.TECH))+'</td>'
+      + '<td class="c-wait">'+(wait?'<span class="pill '+waitingClass(wait)+'">'+esc(wait)+'</span>':'')+'</td>'
+      + '<td class="c-status">'+(stat?'<span class="pill '+statusClass(stat)+'">'+esc(stat)+'</span>':'')+'</td>'
+      + '<td class="c-eta eta">'+esc(cell(r,COL.ETA))+'</td>'
+      + '</tr>';
+  }
+  html += '</tbody></table>';
+  board.innerHTML = html;
+
+  document.getElementById("count").textContent = total;
+  renderPager(pages, currentPage);
+}
+
+function renderPager(pages, active){
+  var p=document.getElementById("pager");
+  if(pages<=1){ p.innerHTML=""; return; }
+  var html="", i;
+  for(i=0;i<pages;i++){ html += '<span class="pg'+(i===active?' on':'')+'"></span>'; }
+  p.innerHTML=html;
+}
+
+/* =====================================================================
+   DATA
+   ===================================================================== */
+function applyData(rows){
+  /* keep only real data rows: WO present and not a spreadsheet error (#N/A etc.) */
+  var clean=[], i, r, wo;
+  for(i=1;i<rows.length;i++){          /* skip header row 0 */
+    r=rows[i];
+    wo=cell(r,COL.WO);
+    if(wo!=="" && wo.charAt(0)!=="#"){ clean.push(r); }
+  }
+  lastRows=clean;
+  renderPage();
+}
+
+function fetchData(){
+  if(configMissing){ return; }
+  var sep = (CSV_URL.indexOf("?")>=0) ? "&" : "?";
+  var url = CSV_URL + sep + "_cb=" + (new Date()).getTime();   /* bust browser/proxy cache */
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", url, true);
+  xhr.onreadystatechange = function(){
+    if(xhr.readyState!==4){ return; }
+    if(xhr.status>=200 && xhr.status<300 && xhr.responseText){
+      try{
+        applyData(parseCSV(xhr.responseText));
+        lastOk = (new Date()).getTime();
+        fetchFailed = false;
+      }catch(e){ fetchFailed = true; }
+    } else {
+      fetchFailed = true;   /* keep last-good data on screen, just flag it */
+    }
+    updateStamp();
+  };
+  xhr.onerror = function(){ fetchFailed=true; updateStamp(); };
+  try{ xhr.send(); }catch(e){ fetchFailed=true; updateStamp(); }
+}
+
+/* =====================================================================
+   CLOCK + STATUS
+   ===================================================================== */
+function updateClock(){
+  var d=new Date();
+  document.getElementById("clock").textContent = pad(d.getHours())+":"+pad(d.getMinutes())+":"+pad(d.getSeconds());
+  updateStamp();
+}
+function updateStamp(){
+  var dot=document.getElementById("dot");
+  var stamp=document.getElementById("stamp");
+  if(configMissing){ dot.className="dot down"; stamp.textContent="No data source set"; return; }
+  if(lastOk===0 && fetchFailed){ dot.className="dot down"; stamp.textContent="Cannot reach sheet"; return; }
+  if(lastOk===0){ dot.className="dot"; stamp.textContent="Loading\u2026"; return; }
+
+  var ageMs=(new Date()).getTime()-lastOk;
+  var t=new Date(lastOk);
+  var label="Updated "+pad(t.getHours())+":"+pad(t.getMinutes())+":"+pad(t.getSeconds());
+
+  if(fetchFailed || ageMs > REFRESH_SECONDS*1000*2.5){
+    dot.className="dot stale";
+    stamp.textContent=label+" (stale)";
+  } else {
+    dot.className="dot";
+    stamp.textContent=label;
+  }
+}
+
+/* =====================================================================
+   INIT
+   ===================================================================== */
+function init(){
+  if(configMissing){ renderSetup(); updateClock(); setInterval(updateClock,1000); return; }
+
+  updateClock();
+  fetchData();
+
+  setInterval(updateClock, 1000);
+  setInterval(fetchData, REFRESH_SECONDS*1000);
+
+  /* page cycling for overflow */
+  setInterval(function(){
+    if(lastRows.length > ROWS_PER_PAGE){
+      var pages=Math.ceil(lastRows.length/ROWS_PER_PAGE);
+      currentPage=(currentPage+1)%pages;
+      renderPage();
+    }
+  }, PAGE_SECONDS*1000);
+
+  if(HARD_RELOAD_MINUTES>0){
+    setTimeout(function(){ window.location.reload(); }, HARD_RELOAD_MINUTES*60*1000);
+  }
+}
+
+if(document.readyState==="loading"){
+  document.addEventListener("DOMContentLoaded", init, false);
+} else { init(); }
+</script>
+</body>
+</html>
