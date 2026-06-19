@@ -1,1 +1,103 @@
-{"asOf":"6/16/26","active":[{"name":"DANIEL","value":34},{"name":"WOODY","value":29},{"name":"JESUS","value":17},{"name":"ZEKE","value":17},{"name":"GABRIEL","value":15},{"name":"KYLE","value":15},{"name":"NOE M","value":12},{"name":"LINK","value":11},{"name":"NOE T","value":10},{"name":"LEO","value":8},{"name":"MANUEL","value":8},{"name":"MARTIN","value":7}],"completedMTD":[{"name":"NOE M","value":57},{"name":"LEO","value":54},{"name":"JESUS","value":43},{"name":"DANIEL","value":39},{"name":"GABRIEL","value":36},{"name":"NOE","value":33},{"name":"MARTIN","value":32},{"name":"KYLE","value":32},{"name":"WOODY","value":22},{"name":"ZEKE","value":22},{"name":"MANUEL","value":11},{"name":"LINK","value":1}]}
+{
+  "asOf": "6/19/26",
+  "active": [
+    {
+      "name": "Daniel",
+      "value": 27
+    },
+    {
+      "name": "Woody",
+      "value": 21
+    },
+    {
+      "name": "Zeke",
+      "value": 17
+    },
+    {
+      "name": "Jesus",
+      "value": 14
+    },
+    {
+      "name": "Noe T",
+      "value": 11
+    },
+    {
+      "name": "Link",
+      "value": 11
+    },
+    {
+      "name": "Kyle",
+      "value": 10
+    },
+    {
+      "name": "Manuel",
+      "value": 9
+    },
+    {
+      "name": "Gabriel",
+      "value": 7
+    },
+    {
+      "name": "Noe M",
+      "value": 7
+    },
+    {
+      "name": "Leo",
+      "value": 4
+    },
+    {
+      "name": "Martin",
+      "value": 3
+    }
+  ],
+  "completedMTD": [
+    {
+      "name": "Noe M",
+      "value": 69
+    },
+    {
+      "name": "Leo",
+      "value": 68
+    },
+    {
+      "name": "Jesus",
+      "value": 51
+    },
+    {
+      "name": "Gabriel",
+      "value": 48
+    },
+    {
+      "name": "Daniel",
+      "value": 46
+    },
+    {
+      "name": "Martin",
+      "value": 41
+    },
+    {
+      "name": "Kyle",
+      "value": 36
+    },
+    {
+      "name": "Noe",
+      "value": 33
+    },
+    {
+      "name": "Woody",
+      "value": 28
+    },
+    {
+      "name": "Zeke",
+      "value": 22
+    },
+    {
+      "name": "Manuel",
+      "value": 15
+    },
+    {
+      "name": "Link",
+      "value": 2
+    }
+  ]
+}
