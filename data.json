@@ -3,19 +3,23 @@
   "active": [
     {
       "name": "Daniel",
-      "value": 32
+      "value": 24
+    },
+    {
+      "name": "Gabriel",
+      "value": 22
     },
     {
       "name": "Woody",
       "value": 18
     },
     {
-      "name": "Zeke",
-      "value": 17
+      "name": "Noe M",
+      "value": 18
     },
     {
-      "name": "Gabriel",
-      "value": 16
+      "name": "Zeke",
+      "value": 17
     },
     {
       "name": "Jesus",
@@ -26,20 +30,16 @@
       "value": 13
     },
     {
-      "name": "Noe M",
-      "value": 13
-    },
-    {
       "name": "Manuel",
       "value": 10
     },
     {
-      "name": "Kyle",
+      "name": "Leo",
       "value": 9
     },
     {
-      "name": "Leo",
-      "value": 9
+      "name": "Kyle",
+      "value": 8
     },
     {
       "name": "Martin",
