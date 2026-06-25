@@ -6,148 +6,181 @@
 <title>Parts Requests</title>
 <style>
   /* ============================================================
-     INDUSTRIAL CONTROL-ROOM THEME
+     LIGHT BOARD THEME
      - No web fonts / no CDN on purpose (reliable on old signage WebView)
      - Class-based, low specificity, no !important
+     - Color is reserved for urgency; everything else stays neutral
      ============================================================ */
   :root{
-    --bg:#0a0d12;
-    --bg2:#0e1219;
-    --panel:#121823;
-    --line:#1d2733;
-    --line2:#283443;
-    --text:#e8eef5;
-    --muted:#8a98a8;
-    --accent:#ffb000;          /* safety amber */
-    --accent-dim:#7a5400;
+    --bg:#f4f6f8;          /* page, faintly cool off-white */
+    --surface:#ffffff;     /* table sheet */
+    --ink:#191d23;         /* primary text */
+    --ink-soft:#39414b;    /* secondary text */
+    --muted:#69727d;       /* labels */
+    --faint:#98a0aa;       /* quietest text / inactive */
+    --line:#e7e9ed;        /* hairline */
+    --line-2:#d4d9df;      /* rule / divider */
+    --zebra:#f8fafb;       /* even-row tint */
+    --mono:ui-monospace,"Cascadia Mono","Roboto Mono",Consolas,"SF Mono",Menlo,monospace;
 
-    /* semantic */
-    --red:#ef4444;   --red-bg:rgba(239,68,68,0.16);   --red-bd:rgba(239,68,68,0.45);
-    --orange:#f97316;--orange-bg:rgba(249,115,22,0.16);--orange-bd:rgba(249,115,22,0.45);
-    --amber:#f59e0b; --amber-bg:rgba(245,158,11,0.16); --amber-bd:rgba(245,158,11,0.45);
-    --green:#22c55e; --green-bg:rgba(34,197,94,0.16);  --green-bd:rgba(34,197,94,0.45);
-    --blue:#3b82f6;  --blue-bg:rgba(59,130,246,0.16);  --blue-bd:rgba(59,130,246,0.45);
-    --slate:#64748b; --slate-bg:rgba(100,116,139,0.16);--slate-bd:rgba(100,116,139,0.45);
+    /* urgency — the only saturated colors on the board */
+    --red:#bf2f1a;   --red-bg:#fbe9e5;   --red-bd:#f0c5bb;   --red-solid:#cf3a22;
+    --amber:#9c5a08; --amber-bg:#fbf0dc; --amber-bd:#ecd3a6;
+    --green:#1d7a4a; --green-bg:#e7f3ec; --green-bd:#bfdcc9;
+
+    /* neutral — for everything that isn't urgent */
+    --neutral-bg:#eef0f3; --neutral-bd:#dde0e5; --neutral-tx:#586571;
+
+    /* priority scale — a warm→cool ramp, deliberately NOT the alarm red */
+    --pr-highest:#c2540c; --pr-highest-bg:#fcebde; --pr-highest-bd:#f2cda6;
+    --pr-high:#94720f;    --pr-high-bg:#f8f1d6;    --pr-high-bd:#e8d39c;
+    --pr-med:#586571;     --pr-med-bg:#eef0f3;     --pr-med-bd:#dde0e5;
+    --pr-low:#356a9e;     --pr-low-bg:#e8f0f9;     --pr-low-bd:#c4d7ec;
+    --pr-lowest:#74808f;  --pr-lowest-bg:#eef1f5;  --pr-lowest-bd:#d9dfe6;
   }
 
   html{font-size:18px;}
   *{box-sizing:border-box;}
   html,body{margin:0;height:100%;}
   body{
-    background:
-      repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 48px),
-      repeating-linear-gradient(90deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 48px),
-      radial-gradient(120% 80% at 50% -10%, var(--bg2), var(--bg) 60%);
-    color:var(--text);
-    font-family:"Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
     overflow:hidden;
     -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
   }
 
-  .wrap{height:100%;display:flex;flex-direction:column;padding:22px 26px 16px;}
+  .wrap{height:100%;display:flex;flex-direction:column;padding:26px 30px 18px;}
 
   /* ---- Header ---- */
-  .head{display:flex;align-items:flex-end;justify-content:space-between;
-    border-bottom:2px solid var(--line2);padding-bottom:14px;margin-bottom:10px;}
-  .brand{display:flex;align-items:center;gap:16px;}
-  .tag{width:10px;height:46px;background:var(--accent);box-shadow:0 0 18px rgba(255,176,0,0.5);border-radius:2px;}
-  .title{font-size:2.05rem;font-weight:800;letter-spacing:0.06em;line-height:1;}
-  .subtitle{font-size:0.8rem;letter-spacing:0.32em;color:var(--muted);text-transform:uppercase;margin-top:6px;}
-  .meta{text-align:right;line-height:1.35;}
-  .count{font-size:1.9rem;font-weight:800;color:var(--accent);line-height:1;}
-  .count small{font-size:0.75rem;letter-spacing:0.28em;color:var(--muted);display:block;text-transform:uppercase;margin-top:6px;}
-  .clock{font-variant-numeric:tabular-nums;font-size:1.05rem;color:var(--text);margin-top:10px;}
-  .stamp{font-size:0.78rem;color:var(--muted);margin-top:3px;display:flex;align-items:center;gap:8px;justify-content:flex-end;}
-  .dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);}
-  .dot.stale{background:var(--amber);box-shadow:0 0 8px var(--amber);}
-  .dot.down{background:var(--red);box-shadow:0 0 8px var(--red);}
+  .head{display:flex;align-items:center;justify-content:space-between;
+    border-bottom:2px solid var(--line-2);padding-bottom:18px;margin-bottom:18px;}
+  .brand{display:flex;align-items:center;gap:18px;}
+  .mark{width:6px;height:46px;background:var(--ink);border-radius:3px;}
+  .title{font-size:2.15rem;font-weight:700;letter-spacing:0.03em;line-height:1;margin:0;text-transform:uppercase;}
+  .subtitle{font-size:0.78rem;letter-spacing:0.28em;color:var(--muted);text-transform:uppercase;margin-top:8px;}
+
+  .meta{display:flex;align-items:center;gap:26px;}
+  .count-block{display:flex;flex-direction:column;align-items:flex-end;line-height:1;}
+  .count{font-size:2.5rem;font-weight:700;color:var(--ink);line-height:1;font-variant-numeric:tabular-nums;}
+  .count-label{font-size:0.72rem;letter-spacing:0.26em;color:var(--muted);text-transform:uppercase;margin-top:7px;}
+  .vrule{width:1px;height:46px;background:var(--line-2);}
+  .feed{display:flex;flex-direction:column;align-items:flex-end;gap:7px;}
+  .clock{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:1.2rem;color:var(--ink-soft);letter-spacing:0.02em;}
+  .stamp{display:flex;align-items:center;gap:8px;font-size:0.82rem;color:var(--muted);}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--green);flex:0 0 auto;}
+  .dot.stale{background:#d39a2a;}
+  .dot.down{background:var(--red-solid);}
 
   /* ---- Board ---- */
-  .board{flex:1;min-height:0;overflow:hidden;}
+  .board{flex:1;min-height:0;overflow:hidden;background:var(--surface);
+    border:1px solid var(--line);border-radius:12px;}
   table{width:100%;border-collapse:collapse;table-layout:fixed;}
   thead th{
-    text-align:left;font-size:0.82rem;letter-spacing:0.18em;text-transform:uppercase;
-    color:var(--muted);font-weight:700;padding:10px 14px;border-bottom:1px solid var(--line2);
+    text-align:left;font-size:0.9rem;letter-spacing:0.14em;text-transform:uppercase;
+    color:var(--muted);font-weight:600;padding:16px 18px;border-bottom:2px solid var(--line-2);
+    background:var(--surface);
   }
   tbody td{
-    padding:13px 14px;border-bottom:1px solid var(--line);font-size:1.4rem;vertical-align:middle;
-    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    padding:13px 16px;border-bottom:1px solid var(--line);font-size:1.4rem;vertical-align:middle;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink);
   }
-  tbody tr:nth-child(even){background:rgba(255,255,255,0.018);}
+  tbody tr:nth-child(even){background:var(--zebra);}
+  tbody tr:last-child td{border-bottom:none;}
+
+  /* overdue row: clean full-row flag (soft red wash + solid left edge) */
+  tbody tr.row-late{background:var(--red-bg);}
+  tbody tr.row-late td:first-child{box-shadow:inset 4px 0 0 0 var(--red-solid);}
 
   /* column widths */
   .c-wo{width:11%;}
-  .c-parts{width:34%;white-space:normal;line-height:1.25;}
-  .c-prio{width:12%;}
+  .c-parts{width:33%;}
+  .c-parts .parts{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.25;}
+  .c-prio{width:13%;}
   .c-tech{width:15%;}
   .c-wait{width:11%;}
   .c-status{width:9%;}
   .c-eta{width:8%;}
 
-  .wo{font-family:"Roboto Mono","Consolas","SF Mono",Menlo,monospace;font-weight:700;color:#fff;letter-spacing:0.02em;}
-  .tech{color:var(--text);}
-  .eta{color:var(--muted);font-variant-numeric:tabular-nums;}
+  .wo{font-family:var(--mono);font-weight:600;color:var(--ink);letter-spacing:0.01em;font-size:1.35rem;}
+  .tech{color:var(--ink-soft);}
+  .eta{color:var(--muted);font-variant-numeric:tabular-nums;font-size:1.3rem;}
 
   /* ---- Pills ---- */
-  .pill{display:inline-block;padding:5px 13px;border-radius:6px;font-size:1.02rem;font-weight:700;
-    letter-spacing:0.03em;border:1px solid transparent;line-height:1.15;}
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 13px;border-radius:7px;
+    font-size:1rem;font-weight:600;letter-spacing:0.01em;border:1px solid transparent;
+    line-height:1.15;white-space:nowrap;}
 
-  .p-crit  {color:var(--red);    background:var(--red-bg);    border-color:var(--red-bd);}
-  .p-high  {color:var(--orange); background:var(--orange-bg); border-color:var(--orange-bd);}
-  .p-med   {color:var(--amber);  background:var(--amber-bg);  border-color:var(--amber-bd);}
-  .p-low   {color:var(--green);  background:var(--green-bg);  border-color:var(--green-bd);}
-  .p-defer {color:var(--slate);  background:var(--slate-bg);  border-color:var(--slate-bd);}
-  .p-none  {color:var(--muted);  background:rgba(255,255,255,0.05); border-color:var(--line2);}
+  /* priority: a 5-step warm→cool scale, kept distinct from the alarm reds */
+  .p-crit   {color:var(--red);        background:var(--red-bg);        border-color:var(--red-bd);font-weight:700;}
+  .p-highest{color:var(--pr-highest); background:var(--pr-highest-bg); border-color:var(--pr-highest-bd);font-weight:700;}
+  .p-high   {color:var(--pr-high);    background:var(--pr-high-bg);    border-color:var(--pr-high-bd);font-weight:700;}
+  .p-med    {color:var(--pr-med);     background:var(--pr-med-bg);     border-color:var(--pr-med-bd);}
+  .p-low    {color:var(--pr-low);     background:var(--pr-low-bg);     border-color:var(--pr-low-bd);}
+  .p-lowest {color:var(--pr-lowest);  background:var(--pr-lowest-bg);  border-color:var(--pr-lowest-bd);}
+  .p-defer  {color:var(--faint);      background:var(--neutral-bg);    border-color:var(--neutral-bd);}
+  .p-none   {color:var(--faint);      background:transparent;          border-color:var(--line);}
 
-  .w-ok    {color:var(--green);  background:var(--green-bg);  border-color:var(--green-bd);}
-  .w-due   {color:var(--amber);  background:var(--amber-bg);  border-color:var(--amber-bd);}
-  .w-late  {color:#fff; background:var(--red); border-color:var(--red); box-shadow:0 0 0 0 rgba(239,68,68,0.6); animation:pulse 1.8s ease-out infinite;}
-  .w-none  {color:var(--muted);  background:rgba(255,255,255,0.05); border-color:var(--line2);}
+  /* waiting: the heartbeat. LATE is the one loud, solid signal */
+  .w-late  {color:#fff;        background:var(--red-solid);border-color:var(--red-solid);font-weight:700;}
+  .w-due   {color:var(--amber);background:var(--amber-bg);  border-color:var(--amber-bd);font-weight:700;}
+  .w-ok    {color:var(--ink-soft);background:transparent;   border-color:transparent;}
+  .w-none  {color:var(--faint);background:transparent;      border-color:var(--line);}
 
-  .s-new      {color:var(--blue);  background:var(--blue-bg);  border-color:var(--blue-bd);}
-  .s-ordered  {color:var(--amber); background:var(--amber-bg); border-color:var(--amber-bd);}
-  .s-delivered{color:var(--green); background:var(--green-bg); border-color:var(--green-bd);}
-  .s-cancelled{color:var(--slate); background:var(--slate-bg); border-color:var(--slate-bd);}
-  .s-none     {color:var(--muted); background:rgba(255,255,255,0.05); border-color:var(--line2);}
-
-  @keyframes pulse{
-    0%  {box-shadow:0 0 0 0 rgba(239,68,68,0.55);}
-    70% {box-shadow:0 0 0 12px rgba(239,68,68,0);}
-    100%{box-shadow:0 0 0 0 rgba(239,68,68,0);}
-  }
-
-  tbody tr{animation:fadein 0.4s ease;}
-  @keyframes fadein{from{opacity:0;}to{opacity:1;}}
+  /* status: quiet workflow state, differentiated by a small dot */
+  .s-new::before,.s-ordered::before,.s-delivered::before,.s-cancelled::before{
+    content:"";width:8px;height:8px;border-radius:50%;flex:0 0 auto;}
+  .s-new       {color:var(--neutral-tx);background:var(--neutral-bg);border-color:var(--neutral-bd);}
+  .s-new::before{background:#6b7785;}
+  .s-ordered   {color:var(--neutral-tx);background:var(--neutral-bg);border-color:var(--neutral-bd);}
+  .s-ordered::before{background:#c08a2e;}
+  .s-delivered {color:var(--green);background:var(--green-bg);border-color:var(--green-bd);}
+  .s-delivered::before{background:var(--green);}
+  .s-cancelled {color:var(--faint);background:var(--neutral-bg);border-color:var(--neutral-bd);text-decoration:line-through;}
+  .s-cancelled::before{background:#b8bec6;}
+  .s-none      {color:var(--faint);background:transparent;border-color:var(--line);}
 
   /* ---- States ---- */
-  .center{display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;gap:14px;text-align:center;}
-  .center .big{font-size:2rem;font-weight:800;color:var(--muted);letter-spacing:0.04em;}
-  .center .sub{font-size:1rem;color:var(--muted);max-width:680px;line-height:1.5;}
-  .center .sub code{background:var(--panel);padding:2px 8px;border-radius:4px;color:var(--accent);
-    font-family:monospace;border:1px solid var(--line2);}
+  .center{display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;gap:14px;text-align:center;padding:40px;}
+  .center .big{font-size:1.9rem;font-weight:700;color:var(--ink-soft);letter-spacing:0.01em;}
+  .center .sub{font-size:1.05rem;color:var(--muted);max-width:680px;line-height:1.55;}
+  .center .sub code{background:var(--neutral-bg);padding:3px 9px;border-radius:5px;color:var(--ink);
+    font-family:var(--mono);border:1px solid var(--neutral-bd);font-size:0.95rem;}
 
   /* ---- Footer ---- */
-  .foot{display:flex;justify-content:space-between;align-items:center;color:var(--muted);
-    font-size:0.74rem;letter-spacing:0.14em;text-transform:uppercase;padding-top:8px;}
-  .pager{display:flex;gap:7px;align-items:center;}
-  .pg{width:9px;height:9px;border-radius:50%;background:var(--line2);}
-  .pg.on{background:var(--accent);box-shadow:0 0 7px var(--accent);}
+  .foot{display:flex;justify-content:space-between;align-items:center;color:var(--faint);
+    font-size:0.74rem;letter-spacing:0.12em;text-transform:uppercase;padding-top:14px;}
+  .pager{display:flex;gap:8px;align-items:center;}
+  .pg{width:8px;height:8px;border-radius:50%;background:var(--line-2);}
+  .pg.on{background:var(--ink);}
+
+  /* ---- Refresh progress: builds up over one 60s refresh cycle ---- */
+  .progress{height:5px;background:var(--line);border-radius:999px;overflow:hidden;margin-top:12px;}
+  .progress-fill{height:100%;background:var(--ink-soft);border-radius:999px;
+    transform:scaleX(0);transform-origin:left center;}
 </style>
 </head>
 <body>
   <div class="wrap">
     <div class="head">
       <div class="brand">
-        <div class="tag"></div>
+        <div class="mark"></div>
         <div>
-          <div class="title">PARTS REQUESTS</div>
+          <div class="title">Parts Requests</div>
           <div class="subtitle">Maintenance &middot; Live Board</div>
         </div>
       </div>
       <div class="meta">
-        <div class="count"><span id="count">0</span><small>Active</small></div>
-        <div class="clock" id="clock">--:--</div>
-        <div class="stamp"><span class="dot" id="dot"></span><span id="stamp">Loading&hellip;</span></div>
+        <div class="count-block">
+          <span class="count" id="count">0</span>
+          <span class="count-label">Active</span>
+        </div>
+        <div class="vrule"></div>
+        <div class="feed">
+          <span class="clock" id="clock">--:--</span>
+          <span class="stamp"><span class="dot" id="dot"></span><span id="stamp">Loading&hellip;</span></span>
+        </div>
       </div>
     </div>
 
@@ -157,6 +190,8 @@
       <div id="footnote">Source: Fiix &rarr; Tracker &middot; Auto-refresh</div>
       <div class="pager" id="pager"></div>
     </div>
+
+    <div class="progress"><div class="progress-fill" id="progress-fill"></div></div>
   </div>
 
 <script>
@@ -232,19 +267,37 @@ function cell(row,idx){ return (row && row[idx]!==undefined && row[idx]!==null) 
 
 function priorityClass(v){
   var s=String(v||"").toLowerCase();
-  if(s.indexOf("crit")>=0||s.indexOf("emerg")>=0||s.indexOf("urgent")>=0||s==="1") return "p-crit";
+  /* true emergencies keep the alarm red; the 5 normal tiers use the warm→cool scale */
+  if(s.indexOf("crit")>=0||s.indexOf("emerg")>=0||s.indexOf("urgent")>=0) return "p-crit";
+  if(s.indexOf("highest")>=0||s==="1") return "p-highest";
   if(s.indexOf("high")>=0||s==="2") return "p-high";
   if(s.indexOf("med")>=0||s.indexOf("norm")>=0||s==="3") return "p-med";
+  if(s.indexOf("lowest")>=0||s==="5") return "p-lowest";
   if(s.indexOf("low")>=0||s==="4") return "p-low";
-  if(s.indexOf("defer")>=0||s.indexOf("plan")>=0||s==="5") return "p-defer";
+  if(s.indexOf("defer")>=0||s.indexOf("plan")>=0) return "p-defer";
   return "p-none";
 }
-function waitingClass(v){
-  var s=String(v||"").trim().toUpperCase();
-  if(s.indexOf("LATE")===0) return "w-late";
-  if(s.indexOf("DUE")===0)  return "w-due";
-  if(s.indexOf("OK")===0)   return "w-ok";
-  return "w-none";
+function waitingDays(v){
+  var m=String(v||"").match(/(\d+)/);
+  return m ? parseInt(m[1],10) : null;
+}
+function waitingClass(v, status){
+  /* the waiting clock only flags NEW requests (still waiting for someone to order the
+     part). once it's ordered or delivered it's being handled -> never red/amber. */
+  var d=waitingDays(v);
+  if(d===null) return "w-none";   /* no day count -> nothing to show */
+  if(String(status||"").trim().toLowerCase()!=="new") return "w-ok"; /* handled -> plain */
+  if(d>=4) return "w-late";       /* New 4+ days  -> red + whole-row highlight */
+  if(d>=2) return "w-due";        /* New 2-3 days -> amber */
+  return "w-ok";                  /* New 0-1 days -> plain, no color */
+}
+function waitingLabel(v){
+  /* show just the day count, no OK / DUE / LATE words */
+  var s=String(v||"").trim();
+  if(s==="") return "";
+  var d=waitingDays(s);
+  if(d!==null) return d+"d";
+  return esc(s.replace(/\b(late|due|ok)\b/gi,"").trim());
 }
 function statusClass(v){
   var s=String(v||"").trim().toLowerCase();
@@ -272,7 +325,7 @@ function renderSetup(){
 function renderEmpty(){
   document.getElementById("board").innerHTML =
     '<div class="center"><div class="big">No active parts requests</div>'
-    + '<div class="sub">New and Ordered requests will appear here automatically.</div></div>';
+    + '<div class="sub">Open requests will appear here automatically.</div></div>';
 }
 
 function renderPage(){
@@ -297,19 +350,21 @@ function renderPage(){
     + '<th class="c-eta">ETA</th>'
     + '</tr></thead><tbody>';
 
-  var i, r, prio, wait, stat;
+  var i, r, prio, wait, stat, waitLbl, wcls;
   for(i=0;i<slice.length;i++){
     r=slice[i];
     prio=cell(r,COL.PRIORITY);
     wait=cell(r,COL.WAITING);
     stat=cell(r,COL.STATUS);
+    waitLbl=waitingLabel(wait);
+    wcls=waitingClass(wait, stat);
     html +=
-      '<tr>'
+      '<tr'+(wcls==="w-late"?' class="row-late"':'')+'>'
       + '<td class="c-wo"><span class="wo">'+esc(cell(r,COL.WO))+'</span></td>'
-      + '<td class="c-parts">'+esc(cell(r,COL.PARTS))+'</td>'
+      + '<td class="c-parts"><span class="parts">'+esc(cell(r,COL.PARTS))+'</span></td>'
       + '<td class="c-prio">'+(prio?'<span class="pill '+priorityClass(prio)+'">'+esc(prio)+'</span>':'')+'</td>'
       + '<td class="c-tech tech">'+esc(cell(r,COL.TECH))+'</td>'
-      + '<td class="c-wait">'+(wait?'<span class="pill '+waitingClass(wait)+'">'+esc(wait)+'</span>':'')+'</td>'
+      + '<td class="c-wait">'+(waitLbl?'<span class="pill '+wcls+'">'+waitLbl+'</span>':'')+'</td>'
       + '<td class="c-status">'+(stat?'<span class="pill '+statusClass(stat)+'">'+esc(stat)+'</span>':'')+'</td>'
       + '<td class="c-eta eta">'+esc(cell(r,COL.ETA))+'</td>'
       + '</tr>';
@@ -398,14 +453,27 @@ function updateStamp(){
 /* =====================================================================
    INIT
    ===================================================================== */
+function startProgress(){
+  /* reset the bar to empty, then build it up to full over one refresh cycle.
+     a single CSS transition does the animating -> no per-frame JS on the player. */
+  var f=document.getElementById("progress-fill");
+  if(!f){ return; }
+  f.style.transition="none";
+  f.style.transform="scaleX(0)";
+  void f.offsetWidth;                /* force reflow so the reset takes effect */
+  f.style.transition="transform "+REFRESH_SECONDS+"s linear";
+  f.style.transform="scaleX(1)";
+}
+
 function init(){
   if(configMissing){ renderSetup(); updateClock(); setInterval(updateClock,1000); return; }
 
   updateClock();
   fetchData();
+  startProgress();
 
   setInterval(updateClock, 1000);
-  setInterval(fetchData, REFRESH_SECONDS*1000);
+  setInterval(function(){ fetchData(); startProgress(); }, REFRESH_SECONDS*1000);
 
   /* page cycling for overflow */
   setInterval(function(){
