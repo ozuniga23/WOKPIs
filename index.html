@@ -22,7 +22,7 @@
   .rows { position:absolute; left:0; top:0; right:0; bottom:4.8vh; overflow:hidden; display:flex; flex-direction:column; }
   .row { position:relative; flex:1 1 0; }
   .name { position:absolute; left:0; top:50%; width:12.7vw; margin-top:-1.05vw; text-align:right;
-    font-size:1.95vw; line-height:2.1vw; font-weight:900; letter-spacing:-0.035em; color:#26231f; white-space:nowrap; }
+    font-size:1.95vw; line-height:2.1vw; font-weight:900; letter-spacing:-0.035em; color:#26231f; text-transform:uppercase; white-space:nowrap; }
   .bar-area { position:absolute; left:15vw; right:3.8vw; top:50%; height:3.35vh; margin-top:-1.675vh; }
   .bar { position:absolute; left:0; top:0; height:100%; width:0%;
     border-radius:0 999px 999px 0;
@@ -54,24 +54,25 @@
   var TOTAL = SLIDE * 2;        // two slides
   var BUILD = SLIDE * 0.4;      // build-up window per slide (8s of 20s)
   var FADE  = 600;             // crossfade duration
-  var LOOP  = false;           // set true to loop forever instead of freezing
 
-  // ---------- Data (edit these to update people / counts) ----------
-  var DATA = {
-    asOf: '4/26/26',
+  // ---------- Live data source ----------
+  // Edit your numbers in the GitHub JSON file and the board pulls them in automatically.
+  var DATA_URL = 'https://raw.githubusercontent.com/ozuniga23/WOKPIs/main/data.json';
+
+  // Fallback shown ONLY if the JSON can't be reached (last known values).
+  var FALLBACK = {
+    asOf: '6/25/26',
     active: [
-      {name:'ZEKE',value:24},{name:'WOODY',value:21},{name:'COLLIN',value:19},
-      {name:'NOE',value:19},{name:'LINK',value:19},{name:'BRAD',value:13},
-      {name:'BOB',value:13},{name:'JESUS',value:10},{name:'MARTIN',value:10},
-      {name:'MANUEL',value:10},{name:'KYLE',value:9},{name:'LEO',value:9},
-      {name:'DANIEL',value:19},{name:'GABRIEL',value:6},{name:'NOE M',value:2}
+      {name:'Gabriel',value:22},{name:'Daniel',value:22},{name:'Woody',value:18},
+      {name:'Zeke',value:16},{name:'Jesus',value:15},{name:'Noe T',value:15},
+      {name:'Noe M',value:14},{name:'Manuel',value:10},{name:'Kyle',value:9},
+      {name:'Martin',value:7},{name:'Leo',value:7},{name:'Link',value:5}
     ],
     completedMTD: [
-      {name:'JESUS',value:66},{name:'BOB',value:62},{name:'COLLIN',value:58},
-      {name:'BRAD',value:51},{name:'GABRIEL',value:51},{name:'KYLE',value:50},
-      {name:'MARTIN',value:38},{name:'ZEKE',value:36},{name:'NOE M',value:32},
-      {name:'WOODY',value:25},{name:'LINK',value:25},{name:'NOE',value:24},
-      {name:'LEO',value:17},{name:'DANIEL',value:17},{name:'MANUEL',value:17}
+      {name:'Leo',value:80},{name:'Noe M',value:75},{name:'Jesus',value:68},
+      {name:'Daniel',value:58},{name:'Gabriel',value:55},{name:'Kyle',value:49},
+      {name:'Martin',value:49},{name:'Woody',value:47},{name:'Noe',value:35},
+      {name:'Zeke',value:27},{name:'Manuel',value:16},{name:'Link',value:13}
     ]
   };
 
@@ -145,19 +146,23 @@
     return { host:host, bars:bars, vals:vals, targets:targets, values:values, durs:durs };
   }
 
-  var scr = [
-    buildScreen(document.getElementById('screen0'), { title:'Active Work Orders',    subtitle:'As of ' + DATA.asOf,        asOf:DATA.asOf, items:DATA.active,       type:'active'    }),
-    buildScreen(document.getElementById('screen1'), { title:'Completed Work Orders', subtitle:'MTD \u2022 As of ' + DATA.asOf, asOf:DATA.asOf, items:DATA.completedMTD, type:'completed' })
-  ];
   var fill = document.getElementById('pfill');
+  var scr = null;
 
-  // clean hidden starting state (prevents any flash on load)
-  scr[0].host.style.zIndex = '2'; scr[1].host.style.zIndex = '1';
-  for (var s=0;s<2;s++){
-    scr[s].host.style.opacity = '0';
-    for (var i=0;i<scr[s].bars.length;i++){
-      scr[s].bars[i].style.width = '0%';
-      scr[s].vals[i].style.left = '0%'; scr[s].vals[i].style.opacity = '0'; scr[s].vals[i].style.transform = 'scale(0.7)';
+  // Build (or rebuild) both screens from a data object, reset to hidden start state.
+  function build(data){
+    scr = [
+      buildScreen(document.getElementById('screen0'), { title:'Active Work Orders',    subtitle:'As of ' + data.asOf,             asOf:data.asOf, items:data.active || [],       type:'active'    }),
+      buildScreen(document.getElementById('screen1'), { title:'Completed Work Orders', subtitle:'MTD \u2022 As of ' + data.asOf,    asOf:data.asOf, items:data.completedMTD || [], type:'completed' })
+    ];
+    // clean hidden starting state (prevents any flash on load)
+    scr[0].host.style.zIndex = '2'; scr[1].host.style.zIndex = '1';
+    for (var s=0;s<2;s++){
+      scr[s].host.style.opacity = '0';
+      for (var i=0;i<scr[s].bars.length;i++){
+        scr[s].bars[i].style.width = '0%';
+        scr[s].vals[i].style.left = '0%'; scr[s].vals[i].style.opacity = '0'; scr[s].vals[i].style.transform = 'scale(0.7)';
+      }
     }
   }
 
@@ -182,7 +187,7 @@
   function frame(now){
     if (start === null) start = now;
     var e = now - start;
-    if (LOOP) e = e % TOTAL; else if (e > TOTAL) e = TOTAL;
+    if (e > TOTAL) e = TOTAL;
 
     fill.style.width = (Math.min(1, e / TOTAL) * 100) + '%';
 
@@ -203,14 +208,43 @@
       }
     }
 
-    if (!LOOP && e >= TOTAL){
+    if (e >= TOTAL){
+      // settle the final frame, then re-fetch fresh JSON and replay (keeps signage live)
       for (var s2=0;s2<2;s2++){ var sc2 = scr[s2]; for (var k=0;k<sc2.bars.length;k++) setRow(sc2, k, 1); }
-      scr[0].host.style.opacity = '0'; scr[1].host.style.opacity = '1'; fill.style.width = '100%';
+      scr[0].host.style.opacity = '0'; scr[1].host.style.opacity = '1';
+      startCycle();
       return;
     }
     requestAnimationFrame(frame);
   }
-  requestAnimationFrame(frame);
+
+  // ---------- Live data: fetch from GitHub, loop forever, refresh every cycle ----------
+  var current = FALLBACK, nextData = null;
+
+  function fetchData(){
+    // cache-bust so the player never shows a stale copy of the JSON
+    var url = DATA_URL + (DATA_URL.indexOf('?') < 0 ? '?' : '&') + 't=' + Date.now();
+    return fetch(url, { cache: 'no-store' })
+      .then(function(r){ if (!r.ok) throw 0; return r.json(); })
+      .then(function(d){ if (!d || !d.active) throw 0; return d; })
+      .catch(function(){ return null; });   // null => keep last good data
+  }
+
+  function startCycle(){
+    if (nextData) { current = nextData; nextData = null; }
+    build(current);
+    start = null;
+    fetchData().then(function(d){ if (d) nextData = d; });  // prefetch for the next loop
+    requestAnimationFrame(frame);
+  }
+
+  // first paint: show live data if it arrives quickly, otherwise fall back
+  // immediately so the board never sits blank on a cold boot. Either way it
+  // keeps refreshing from GitHub on every loop after that.
+  var painted = false;
+  function firstPaint(d){ if (painted) return; painted = true; if (d) current = d; startCycle(); }
+  fetchData().then(firstPaint);
+  setTimeout(function(){ firstPaint(null); }, 2500);
 })();
 </script>
 </body>
