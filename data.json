@@ -30,6 +30,10 @@
       "value": 11
     },
     {
+      "name": "Zeke",
+      "value": 10
+    },
+    {
       "name": "Kyle",
       "value": 9
     },
@@ -44,10 +48,6 @@
     {
       "name": "Link",
       "value": 8
-    },
-    {
-      "name": "Zeke",
-      "value": 6
     }
   ],
   "completedMTD": [
