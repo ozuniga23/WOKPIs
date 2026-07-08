@@ -1,79 +1,79 @@
 {
-  "asOf": "7/7/26",
+  "asOf": "7/8/26",
   "active": [
     {
       "name": "Noe T",
-      "value": 37
+      "value": 38
     },
     {
       "name": "Daniel",
-      "value": 18
+      "value": 17
     },
     {
       "name": "Woody",
-      "value": 14
-    },
-    {
-      "name": "Jesus",
-      "value": 11
+      "value": 13
     },
     {
       "name": "Manuel",
       "value": 11
     },
     {
-      "name": "Zeke",
+      "name": "Jesus",
       "value": 10
     },
     {
-      "name": "Kyle",
+      "name": "Zeke",
       "value": 9
     },
     {
-      "name": "Gabriel",
+      "name": "Kyle",
       "value": 8
     },
     {
       "name": "Noe M",
-      "value": 8
+      "value": 7
     },
     {
       "name": "Leo",
-      "value": 8
+      "value": 7
     },
     {
       "name": "Martin",
-      "value": 8
+      "value": 7
     },
     {
       "name": "Link",
-      "value": 7
+      "value": 6
+    },
+    {
+      "name": "Gabriel",
+      "value": 5
     }
   ],
   "completedMTD": [
     {
       "name": "Gabriel",
-      "value": 24
+      "value": 30
     },
     {
       "name": "Noe M",
-      "value": 20
-    },
-    {
-      "name": "Martin",
-      "value": 20
+      "value": 27
     },
     {
       "name": "Leo",
-      "value": 18
+      "value": 25
     },
     {
-      "name": "Daniel",
-      "value": 15
+      "name": "Martin",
+      "value": 21
     },
     {
       "name": "Zeke",
-      "value": 15
+      "value": 19
+    },
+    {
+      "name": "Daniel",
+      "value": 17
     },
     {
       "name": "Jesus",
