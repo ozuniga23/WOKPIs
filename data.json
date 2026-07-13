@@ -3,11 +3,15 @@
   "active": [
     {
       "name": "Noe T",
-      "value": 27
+      "value": 32
     },
     {
       "name": "Daniel",
-      "value": 17
+      "value": 18
+    },
+    {
+      "name": "Woody",
+      "value": 12
     },
     {
       "name": "Manuel",
@@ -18,36 +22,32 @@
       "value": 10
     },
     {
-      "name": "Woody",
-      "value": 10
-    },
-    {
-      "name": "Noe M",
-      "value": 7
+      "name": "Kyle",
+      "value": 8
     },
     {
       "name": "Martin",
-      "value": 6
+      "value": 8
     },
     {
       "name": "Jesus",
-      "value": 6
+      "value": 8
     },
     {
       "name": "Link",
-      "value": 6
+      "value": 8
     },
     {
-      "name": "Kyle",
-      "value": 5
+      "name": "Noe M",
+      "value": 8
     },
     {
       "name": "Leo",
-      "value": 5
+      "value": 7
     },
     {
       "name": "Gabriel",
-      "value": 4
+      "value": 5
     }
   ],
   "completedMTD": [
