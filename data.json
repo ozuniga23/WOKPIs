@@ -3,51 +3,51 @@
   "active": [
     {
       "name": "Noe T",
-      "value": 26
+      "value": 25
+    },
+    {
+      "name": "Leo",
+      "value": 19
+    },
+    {
+      "name": "Martin",
+      "value": 19
     },
     {
       "name": "Daniel",
-      "value": 15
+      "value": 19
+    },
+    {
+      "name": "Gabriel",
+      "value": 18
+    },
+    {
+      "name": "Kyle",
+      "value": 18
+    },
+    {
+      "name": "Jesus",
+      "value": 17
+    },
+    {
+      "name": "Noe M",
+      "value": 13
+    },
+    {
+      "name": "Woody",
+      "value": 12
+    },
+    {
+      "name": "Link",
+      "value": 11
     },
     {
       "name": "Manuel",
       "value": 11
     },
     {
-      "name": "Noe M",
-      "value": 8
-    },
-    {
-      "name": "Woody",
-      "value": 8
-    },
-    {
-      "name": "Martin",
-      "value": 7
-    },
-    {
-      "name": "Link",
-      "value": 7
-    },
-    {
-      "name": "Leo",
-      "value": 6
-    },
-    {
-      "name": "Kyle",
-      "value": 6
-    },
-    {
       "name": "Zeke",
       "value": 6
-    },
-    {
-      "name": "Gabriel",
-      "value": 5
-    },
-    {
-      "name": "Jesus",
-      "value": 5
     }
   ],
   "completedMTD": [
@@ -57,11 +57,11 @@
     },
     {
       "name": "Leo",
-      "value": 46
+      "value": 49
     },
     {
       "name": "Noe M",
-      "value": 45
+      "value": 46
     },
     {
       "name": "Woody",
@@ -69,7 +69,7 @@
     },
     {
       "name": "Daniel",
-      "value": 38
+      "value": 40
     },
     {
       "name": "Martin",
@@ -93,7 +93,7 @@
     },
     {
       "name": "Noe",
-      "value": 16
+      "value": 17
     },
     {
       "name": "Manuel",
