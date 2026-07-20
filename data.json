@@ -1,40 +1,40 @@
 {
-  "asOf": "7/17/26",
+  "asOf": "7/20/26",
   "active": [
     {
-      "name": "Noe T",
-      "value": 24
+      "name": "Daniel",
+      "value": 20
     },
     {
-      "name": "Daniel",
-      "value": 21
+      "name": "Noe T",
+      "value": 18
     },
     {
       "name": "Woody",
+      "value": 16
+    },
+    {
+      "name": "Zeke",
       "value": 12
     },
     {
-      "name": "Noe M",
-      "value": 11
-    },
-    {
       "name": "Leo",
-      "value": 11
+      "value": 12
     },
     {
       "name": "Martin",
       "value": 11
     },
     {
-      "name": "Link",
+      "name": "Gabriel",
       "value": 11
     },
     {
-      "name": "Gabriel",
-      "value": 10
+      "name": "Noe M",
+      "value": 11
     },
     {
-      "name": "Kyle",
+      "name": "Jesus",
       "value": 10
     },
     {
@@ -42,18 +42,22 @@
       "value": 10
     },
     {
-      "name": "Jesus",
-      "value": 8
+      "name": "Link",
+      "value": 9
     },
     {
-      "name": "Zeke",
-      "value": 8
+      "name": "Kyle",
+      "value": 7
     }
   ],
   "completedMTD": [
     {
       "name": "Noe M",
-      "value": 57
+      "value": 60
+    },
+    {
+      "name": "Woody",
+      "value": 58
     },
     {
       "name": "Gabriel",
@@ -64,40 +68,36 @@
       "value": 52
     },
     {
-      "name": "Woody",
-      "value": 42
+      "name": "Jesus",
+      "value": 46
     },
     {
       "name": "Daniel",
-      "value": 40
+      "value": 45
     },
     {
       "name": "Martin",
       "value": 37
     },
     {
-      "name": "Jesus",
-      "value": 35
-    },
-    {
       "name": "Zeke",
-      "value": 35
-    },
-    {
-      "name": "Kyle",
-      "value": 24
+      "value": 36
     },
     {
       "name": "Link",
-      "value": 22
+      "value": 32
+    },
+    {
+      "name": "Kyle",
+      "value": 31
     },
     {
       "name": "Noe",
-      "value": 18
+      "value": 26
     },
     {
       "name": "Manuel",
-      "value": 7
+      "value": 9
     }
   ]
 }
