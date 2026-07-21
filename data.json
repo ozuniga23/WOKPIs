@@ -18,15 +18,15 @@
       "value": 11
     },
     {
-      "name": "Leo",
-      "value": 11
-    },
-    {
       "name": "Manuel",
       "value": 11
     },
     {
       "name": "Jesus",
+      "value": 10
+    },
+    {
+      "name": "Leo",
       "value": 10
     },
     {
@@ -57,7 +57,7 @@
     },
     {
       "name": "Leo",
-      "value": 63
+      "value": 64
     },
     {
       "name": "Gabriel",
