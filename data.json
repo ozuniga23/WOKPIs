@@ -2,12 +2,12 @@
   "asOf": "7/22/26",
   "active": [
     {
-      "name": "Daniel",
-      "value": 19
+      "name": "Link",
+      "value": 21
     },
     {
-      "name": "Link",
-      "value": 17
+      "name": "Daniel",
+      "value": 19
     },
     {
       "name": "Noe T",
@@ -22,11 +22,15 @@
       "value": 11
     },
     {
-      "name": "Martin",
+      "name": "Zeke",
+      "value": 10
+    },
+    {
+      "name": "Kyle",
       "value": 9
     },
     {
-      "name": "Zeke",
+      "name": "Martin",
       "value": 9
     },
     {
@@ -36,10 +40,6 @@
     {
       "name": "Jesus",
       "value": 8
-    },
-    {
-      "name": "Kyle",
-      "value": 7
     },
     {
       "name": "Gabriel",
@@ -85,7 +85,7 @@
     },
     {
       "name": "Link",
-      "value": 32
+      "value": 34
     },
     {
       "name": "Kyle",
