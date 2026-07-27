@@ -1,103 +1,103 @@
 {
-  "asOf": "7/23/26",
+  "asOf": "7/27/26",
   "active": [
     {
-      "name": "Link",
-      "value": 17
+      "name": "Daniel",
+      "value": 16
     },
     {
       "name": "Zeke",
       "value": 16
     },
     {
-      "name": "Daniel",
+      "name": "Woody",
       "value": 15
+    },
+    {
+      "name": "Link",
+      "value": 13
     },
     {
       "name": "Noe T",
-      "value": 15
-    },
-    {
-      "name": "Woody",
-      "value": 14
+      "value": 13
     },
     {
       "name": "Manuel",
-      "value": 11
-    },
-    {
-      "name": "Noe M",
-      "value": 9
-    },
-    {
-      "name": "Martin",
-      "value": 9
-    },
-    {
-      "name": "Gabriel",
-      "value": 7
+      "value": 10
     },
     {
       "name": "Leo",
-      "value": 7
+      "value": 8
     },
     {
       "name": "Jesus",
-      "value": 7
+      "value": 8
     },
     {
       "name": "Kyle",
       "value": 7
+    },
+    {
+      "name": "Martin",
+      "value": 6
+    },
+    {
+      "name": "Noe M",
+      "value": 5
+    },
+    {
+      "name": "Gabriel",
+      "value": 4
     }
   ],
   "completedMTD": [
     {
       "name": "Noe M",
-      "value": 77
-    },
-    {
-      "name": "Leo",
-      "value": 71
+      "value": 102
     },
     {
       "name": "Gabriel",
-      "value": 70
+      "value": 92
+    },
+    {
+      "name": "Leo",
+      "value": 91
     },
     {
       "name": "Woody",
-      "value": 65
+      "value": 72
     },
     {
       "name": "Daniel",
-      "value": 53
+      "value": 62
     },
     {
       "name": "Jesus",
       "value": 51
     },
     {
-      "name": "Zeke",
-      "value": 42
+      "name": "Martin",
+      "value": 50
     },
     {
-      "name": "Martin",
-      "value": 40
+      "name": "Zeke",
+      "value": 49
+    },
+    {
+      "name": "Kyle",
+      "value": 37
     },
     {
       "name": "Link",
       "value": 36
     },
     {
-      "name": "Kyle",
-      "value": 35
-    },
-    {
       "name": "Noe",
-      "value": 31
+      "value": 34
     },
     {
       "name": "Manuel",
-      "value": 9
+      "value": 10
     }
   ]
 }
