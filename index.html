@@ -56,8 +56,8 @@
   var FADE  = 600;             // crossfade duration
 
   // ---------- Live data source ----------
-  // Edit your numbers in the GitHub JSON file and the board pulls them in automatically.
-  var DATA_URL = 'https://raw.githubusercontent.com/ozuniga23/WOKPIs/main/data.json';
+  // Read-only Apps Script endpoint backed by the private Google Sheet.
+  var DATA_URL = 'https://script.google.com/macros/s/AKfycbzTZBXdepYHcVDlWMlHRHX1Lx6hM_HCFMPLh4nqgL-qA-PU6b-AVdUCfWGv36VXnW6P/exec';
 
   // Fallback shown ONLY if the JSON can't be reached (last known values).
   var FALLBACK = {
@@ -218,16 +218,52 @@
     requestAnimationFrame(frame);
   }
 
-  // ---------- Live data: fetch from GitHub, loop forever, refresh every cycle ----------
+  // ---------- Live data: load from Google Sheets, loop forever, refresh every cycle ----------
   var current = FALLBACK, nextData = null;
+  var dataRequestId = 0;
+
+  function isDataShapeValid(d){
+    if (!d || typeof d.asOf !== 'string') return false;
+    if (Object.prototype.toString.call(d.active) !== '[object Array]') return false;
+    if (Object.prototype.toString.call(d.completedMTD) !== '[object Array]') return false;
+    var groups = [d.active, d.completedMTD];
+    for (var g=0;g<groups.length;g++){
+      for (var i=0;i<groups[g].length;i++){
+        var item = groups[g][i];
+        if (!item || typeof item.name !== 'string' || !item.name) return false;
+        if (typeof item.value !== 'number' || !isFinite(item.value) || item.value < 0) return false;
+      }
+    }
+    return true;
+  }
 
   function fetchData(){
-    // cache-bust so the player never shows a stale copy of the JSON
-    var url = DATA_URL + (DATA_URL.indexOf('?') < 0 ? '?' : '&') + 't=' + Date.now();
-    return fetch(url, { cache: 'no-store' })
-      .then(function(r){ if (!r.ok) throw 0; return r.json(); })
-      .then(function(d){ if (!d || !d.active) throw 0; return d; })
-      .catch(function(){ return null; });   // null => keep last good data
+    return new Promise(function(resolve){
+      var callbackName = '__wokpisData' + Date.now() + '_' + (++dataRequestId);
+      var script = document.createElement('script');
+      var done = false, timer;
+
+      function finish(d){
+        if (done) return;
+        done = true;
+        if (timer) clearTimeout(timer);
+        script.onerror = null;
+        if (script.parentNode) script.parentNode.removeChild(script);
+        try { delete window[callbackName]; }
+        catch (ignore) { window[callbackName] = undefined; }
+        resolve(isDataShapeValid(d) ? d : null);
+      }
+
+      window[callbackName] = finish;
+      script.async = true;
+      script.onerror = function(){ finish(null); };
+      script.src = DATA_URL +
+        (DATA_URL.indexOf('?') < 0 ? '?' : '&') +
+        'callback=' + encodeURIComponent(callbackName) +
+        '&t=' + Date.now();
+      timer = setTimeout(function(){ finish(null); }, 10000);
+      document.getElementsByTagName('head')[0].appendChild(script);
+    });
   }
 
   function startCycle(){
@@ -240,7 +276,7 @@
 
   // first paint: show live data if it arrives quickly, otherwise fall back
   // immediately so the board never sits blank on a cold boot. Either way it
-  // keeps refreshing from GitHub on every loop after that.
+  // keeps refreshing from Google Sheets on every loop after that.
   var painted = false;
   function firstPaint(d){ if (painted) return; painted = true; if (d) current = d; startCycle(); }
   fetchData().then(firstPaint);
