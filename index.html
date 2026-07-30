@@ -58,23 +58,7 @@
   // ---------- Live data source ----------
   // Read-only Apps Script endpoint backed by the private Google Sheet.
   var DATA_URL = 'https://script.google.com/macros/s/AKfycbzTZBXdepYHcVDlWMlHRHX1Lx6hM_HCFMPLh4nqgL-qA-PU6b-AVdUCfWGv36VXnW6P/exec';
-
-  // Fallback shown ONLY if the JSON can't be reached (last known values).
-  var FALLBACK = {
-    asOf: '6/25/26',
-    active: [
-      {name:'Gabriel',value:22},{name:'Daniel',value:22},{name:'Woody',value:18},
-      {name:'Zeke',value:16},{name:'Jesus',value:15},{name:'Noe T',value:15},
-      {name:'Noe M',value:14},{name:'Manuel',value:10},{name:'Kyle',value:9},
-      {name:'Martin',value:7},{name:'Leo',value:7},{name:'Link',value:5}
-    ],
-    completedMTD: [
-      {name:'Leo',value:80},{name:'Noe M',value:75},{name:'Jesus',value:68},
-      {name:'Daniel',value:58},{name:'Gabriel',value:55},{name:'Kyle',value:49},
-      {name:'Martin',value:49},{name:'Woody',value:47},{name:'Noe',value:35},
-      {name:'Zeke',value:27},{name:'Manuel',value:16},{name:'Link',value:13}
-    ]
-  };
+  var CACHE_KEY = 'wokpis:sheet-last-good-data:v2';
 
   function el(tag, cls){ var e = document.createElement(tag); if (cls) e.className = cls; return e; }
   function sortDesc(items){ return items.slice().sort(function(a,b){ return b.value - a.value; }); }
@@ -219,13 +203,14 @@
   }
 
   // ---------- Live data: load from Google Sheets, loop forever, refresh every cycle ----------
-  var current = FALLBACK, nextData = null;
+  var current = loadCachedData(), nextData = null;
   var dataRequestId = 0;
 
   function isDataShapeValid(d){
-    if (!d || typeof d.asOf !== 'string') return false;
+    if (!d || typeof d.asOf !== 'string' || !d.asOf) return false;
     if (Object.prototype.toString.call(d.active) !== '[object Array]') return false;
     if (Object.prototype.toString.call(d.completedMTD) !== '[object Array]') return false;
+    if (!d.active.length || !d.completedMTD.length) return false;
     var groups = [d.active, d.completedMTD];
     for (var g=0;g<groups.length;g++){
       for (var i=0;i<groups[g].length;i++){
@@ -237,7 +222,27 @@
     return true;
   }
 
-  function fetchData(){
+  function loadCachedData(){
+    try {
+      var raw = window.localStorage && window.localStorage.getItem(CACHE_KEY);
+      if (!raw) return null;
+      var saved = JSON.parse(raw);
+      return isDataShapeValid(saved) ? saved : null;
+    } catch (ignore) {
+      return null;
+    }
+  }
+
+  function saveCachedData(d){
+    if (!isDataShapeValid(d)) return;
+    try {
+      if (window.localStorage) {
+        window.localStorage.setItem(CACHE_KEY, JSON.stringify(d));
+      }
+    } catch (ignore) {}
+  }
+
+  function fetchData(timeoutMs){
     return new Promise(function(resolve){
       var callbackName = '__wokpisData' + Date.now() + '_' + (++dataRequestId);
       var script = document.createElement('script');
@@ -261,7 +266,7 @@
         (DATA_URL.indexOf('?') < 0 ? '?' : '&') +
         'callback=' + encodeURIComponent(callbackName) +
         '&t=' + Date.now();
-      timer = setTimeout(function(){ finish(null); }, 10000);
+      timer = setTimeout(function(){ finish(null); }, timeoutMs || 10000);
       document.getElementsByTagName('head')[0].appendChild(script);
     });
   }
@@ -270,17 +275,30 @@
     if (nextData) { current = nextData; nextData = null; }
     build(current);
     start = null;
-    fetchData().then(function(d){ if (d) nextData = d; });  // prefetch for the next loop
+    fetchData().then(function(d){
+      if (!d) return;
+      saveCachedData(d);
+      nextData = d;
+    });  // prefetch for the next loop
     requestAnimationFrame(frame);
   }
 
-  // first paint: show live data if it arrives quickly, otherwise fall back
-  // immediately so the board never sits blank on a cold boot. Either way it
-  // keeps refreshing from Google Sheets on every loop after that.
-  var painted = false;
-  function firstPaint(d){ if (painted) return; painted = true; if (d) current = d; startCycle(); }
-  fetchData().then(firstPaint);
-  setTimeout(function(){ firstPaint(null); }, 2500);
+  function waitForFirstData(){
+    fetchData(35000).then(function(d){
+      if (d) {
+        current = d;
+        saveCachedData(d);
+        startCycle();
+        return;
+      }
+      setTimeout(waitForFirstData, 3000);
+    });
+  }
+
+  // Reuse the last successful Sheet response immediately after an OptiSigns
+  // reload. A brand-new player waits for live data instead of showing old values.
+  if (current) startCycle();
+  else waitForFirstData();
 })();
 </script>
 </body>
