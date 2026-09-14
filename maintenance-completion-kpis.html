@@ -114,6 +114,7 @@ svg { display:block; position:absolute; top:0; left:0; width:100%; height:100%; 
   var marks = document.querySelectorAll('[data-reveal-month]');
   var originals = [], coordinates = [], months = [];
   var duration = 3000, started, stopped = false;
+  var requestFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
   var i, j;
 
   function finish() {
@@ -149,7 +150,13 @@ svg { display:block; position:absolute; top:0; left:0; width:100%; height:100%; 
         var opacity = Math.min(1, Math.max(0, (progress * 7 - months[i]) * 3 + 1));
         marks[i].setAttribute('opacity', opacity);
       }
-      setTimeout(frame, Math.min(33, duration - elapsed));
+      // Match the display refresh (60 FPS on a 60 Hz TV).
+      // Older engines without requestAnimationFrame use a ~60 FPS timer.
+      if (requestFrame) {
+        requestFrame.call(window, frame);
+      } else {
+        setTimeout(frame, Math.min(1000 / 60, duration - elapsed));
+      }
     } catch (error) {
       finish();
     }
