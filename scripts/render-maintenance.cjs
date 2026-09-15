@@ -35,7 +35,7 @@ function chart(data,site,type,months,top) {
   const latest = rows[rows.length-1], target = type === 'PM' ? 0.9 : 0.8;
   const isPM = type === 'PM';
   const left = 520, right = 1840, step = (right-left)/11;
-  const graphTop = top+(isPM ? 58:40), base = top+(isPM ? 318:187), height = base-graphTop;
+  const graphTop = top+40, base = top+187, height = base-graphTop;
   const percent = row => row.completion_pct === null ? '—' : (row.completion_pct *100).toFixed(1)+'%';
   const currentMonth = MONTHS[Number(latest.month.slice(5))-1];
   const overdue = rows.reduce((sum,r) => sum+r.overdue,0);
@@ -80,19 +80,19 @@ function chart(data,site,type,months,top) {
       out += `<rect x="${x-7}" y="${num(y-7)}" width="14" height="14" fill="${color}" data-reveal-x="${x}"><title>${esc(MONTHS[m]+': '+percent(row))}</title></rect>`;
       out += label(x,num(y-19),percent(row),22,color,'middle',`font-weight="600" data-reveal-x="${x}"`);
     } else out += label(x,base-15,'—',22,MUTED,'middle');
-    out += label(x,top+(isPM ? 355:363),MONTHS[m].slice(0,3),23,INK,'middle');
+    out += label(x,top+363,MONTHS[m].slice(0,3),23,INK,'middle');
   });
-  if (!isPM) out += createdTrend(rows,top,left,right,step,data.as_of_date.slice(0,7));
+  out += createdTrend(rows,type,top,left,right,step,data.as_of_date.slice(0,7));
   return out+'</g>';
 }
 
-function createdTrend(rows,top,left,right,step,currentMonth) {
+function createdTrend(rows,type,top,left,right,step,currentMonth) {
   const graphTop=top+264, base=top+330, height=base-graphTop;
   const maxCount=Math.max(...rows.map(r=>r.created));
   const unit=maxCount<=10 ? 5:maxCount<=100 ? 25:100;
   const ceiling=Math.max(unit,Math.ceil(maxCount/unit)*unit);
-  let out='<g id="non-pm-created-trend">';
-  out+=label(left-step/2,top+224,'Non-PM jobs created',22,INK,'start','font-weight="600"');
+  let out='<g id="'+(type === 'PM' ? 'pm':'non-pm')+'-created-trend">';
+  out+=label(left-step/2,top+224,type+' jobs created',22,INK,'start','font-weight="600"');
   out+=label(right+step/2,top+224,'Current month is still growing',20,MUTED,'end');
   rows.forEach((row,i)=>{
     if(row.month===currentMonth) out+=`<rect data-count-provisional-month="${row.month}" x="${num(left+i*step-step/2)}" y="${graphTop-35}" width="${step}" height="${height+47}" fill="#eee1c3"><title>Current month is not finished; more jobs can be created.</title></rect>`;
@@ -107,7 +107,7 @@ function createdTrend(rows,top,left,right,step,currentMonth) {
   out+=`<path class="trend-line" d="${path.trim()}" fill="none" stroke="${INK}" stroke-width="3" stroke-linecap="round"/>`;
   rows.forEach((row,i)=>{
     const x=left+i*step,y=base-row.created/ceiling*height;
-    out+=`<circle cx="${num(x)}" cy="${num(y)}" r="4" fill="${INK}" data-reveal-x="${num(x)}"><title>${esc(MONTHS[Number(row.month.slice(5))-1]+': '+row.created+' non-PM jobs created')}</title></circle>`;
+    out+=`<circle cx="${num(x)}" cy="${num(y)}" r="4" fill="${INK}" data-reveal-x="${num(x)}"><title>${esc(MONTHS[Number(row.month.slice(5))-1]+': '+row.created+' '+type+' jobs created')}</title></circle>`;
     out+=label(num(x),num(y-12),row.created,21,INK,'middle',`font-weight="600" data-reveal-x="${num(x)}" data-created-month="${row.month}"`);
   });
   return out+'</g>';
@@ -188,12 +188,15 @@ function browserEnhancement() {
 function renderDashboard(data,site='All') {
   const months=validate(data,site),date=new Date(data.as_of_date+'T12:00:00Z');
   const dateLabel='Last updated '+DAYS[date.getUTCDay()]+', '+MONTHS[date.getUTCMonth()]+' '+date.getUTCDate();
-  let svg=`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="dashboard-title dashboard-description" data-updated="${esc(data.updated_at)}|pm-nonpm-v2" data-site="${esc(site)}">\n<title id="dashboard-title">Maintenance Completion KPIs — ${esc(site === 'All' ? 'Both sites':site)}</title><desc id="dashboard-description">${esc(dateLabel)}. Selected maintenance crew. Twelve months of on-time completion, open work and overdue work. Completion charts use a zero to 100 percent scale. Non-PM jobs created use a separate count scale beneath the non-PM percentage chart. Non-PM includes repairs, projects and other work with no scheduled PM attached, not just breakdowns. Shaded completion months can change; the shaded current-month count is unfinished.</desc><rect width="1920" height="1080" fill="#f3f2f2"/><g font-family="Helvetica, Arial, sans-serif">`;
+  let svg=`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid meet" role="group" aria-labelledby="dashboard-title dashboard-description" data-updated="${esc(data.updated_at)}|pm-nonpm-v3" data-site="${esc(site)}">\n<title id="dashboard-title">Maintenance Completion KPIs — ${esc(site === 'All' ? 'Both sites':site)}</title><desc id="dashboard-description">${esc(dateLabel)}. Selected maintenance crew. Twelve months of on-time completion, open work and overdue work. Completion charts use a zero to 100 percent scale. PM and Non-PM jobs created each use a separate count scale beneath their percentage chart. Non-PM includes repairs, projects and other work with no scheduled PM attached, not just breakdowns. Shaded completion months can change; the shaded current-month count is unfinished.</desc><rect width="1920" height="1080" fill="#f3f2f2"/><g font-family="Helvetica, Arial, sans-serif">`;
   svg+=label(48,76,'Maintenance Completion',44,INK,'start','font-weight="600"');
   svg+=label(1872,76,dateLabel,27,MUTED,'end');
   svg+='<line x1="48" y1="107" x2="1872" y2="107" stroke="#201e1d" stroke-width="2"/>';
   const sites=[['All','Both sites','maintenance-completion-kpis.html'],['Grandview','Grandview','maintenance-completion-grandview.html'],['Prosser','Prosser','maintenance-completion-prosser.html']];
-  sites.forEach(([value,text,url],i) => { svg+=`<a xlink:href="${url}" aria-label="Show ${text}">`+label(48+i*175,145,text,23,value === site ? INK:MUTED,'start',value === site ? 'font-weight="700" text-decoration="underline"':'')+'</a>'; });
+  // Native dropdown stays with the SVG during the existing automatic refresh.
+  svg+='<foreignObject x="48" y="118" width="260" height="48"><div xmlns="http://www.w3.org/1999/xhtml"><select aria-label="Site" onchange="window.location.href=this.value" style="box-sizing:border-box;width:250px;height:42px;font:600 23px Helvetica,Arial,sans-serif;color:#201e1d;background:#f3f2f2;border:1px solid #8a8582;border-radius:5px;padding:4px 12px;cursor:pointer">';
+  sites.forEach(([value,text,url]) => { svg+=`<option value="${url}"${value === site ? ' selected="selected"':''}>${text}</option>`; });
+  svg+='</select></div></foreignObject>';
   svg+=label(900,145,'Selected maintenance crew · Rolling 12 months',21,MUTED,'middle');
   svg+='<rect x="1490" y="125" width="24" height="24" fill="#eee1c3"/>';
   svg+=label(1526,145,'Still in progress',23);

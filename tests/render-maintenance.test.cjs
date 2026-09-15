@@ -97,19 +97,40 @@ test('animation stays finite at a target crossing and restores the full static c
   marks.forEach(p=>assert.equal(p.getAttribute('opacity'), undefined));
 });
 
-test('shows monthly created counts only inside non-PM and uses the selected site', () => {
+test('shows separate PM and non-PM monthly counts for the selected site', () => {
   const data = fixture();
   Object.assign(data.months.find(r=>r.site==='Prosser' && r.type==='Non-PM' && r.month==='2026-09'),
     {created:40,completed:32,on_time:28,open:8,overdue:1,completion_pct:0.7});
+  Object.assign(data.months.find(r=>r.site==='Prosser' && r.type==='PM' && r.month==='2026-09'),
+    {created:60,completed:48,on_time:42,open:12,overdue:1,completion_pct:0.7});
   const html=renderDashboard(data,'Prosser');
   const nonPm=html.slice(html.indexOf('<g id="non-pm">'),html.indexOf('<g id="preventive">'));
   const pm=html.slice(html.indexOf('<g id="preventive">'));
   assert.equal((nonPm.match(/data-created-month=/g)||[]).length,12);
   assert.match(nonPm,/data-created-month="2026-09"[^>]*>40<\/text>/);
-  assert.doesNotMatch(pm,/data-created-month=|created-trend/);
-  assert.equal((html.match(/data-count-provisional-month=/g)||[]).length,1);
+  assert.equal((pm.match(/data-created-month=/g)||[]).length,12);
+  assert.match(pm,/id="pm-created-trend"/);
+  assert.match(pm,/data-created-month="2026-09"[^>]*>60<\/text>/);
+  assert.doesNotMatch(pm,/>40<\/text>/);
+  assert.equal((html.match(/data-count-provisional-month=/g)||[]).length,2);
   assert.match(html,/data-count-provisional-month="2026-09"/);
   assert.doesNotMatch(html,/data-count-provisional-month="2026-08"/);
+});
+
+test('one native site dropdown defaults to both sites and identifies each site page', () => {
+  const pages=[['All','Both sites','maintenance-completion-kpis.html'],['Grandview','Grandview','maintenance-completion-grandview.html'],['Prosser','Prosser','maintenance-completion-prosser.html']];
+  for (const [site,label,url] of pages) {
+    const html=renderDashboard(fixture(),site);
+    assert.equal((html.match(/<select /g)||[]).length,1);
+    assert.match(html,/<select[^>]*aria-label="Site"/);
+    assert.equal((html.match(/<option /g)||[]).length,3);
+    assert.match(html,new RegExp('<option value="'+url+'" selected="selected">'+label+'</option>'));
+    assert.doesNotMatch(html,/<a xlink:href="maintenance-completion/);
+    const handler=html.match(/onchange="([^"]+)"/)[1];
+    const context={window:{location:{href:url}}};
+    require('node:vm').runInNewContext('(function(){'+handler+'}).call({value:"maintenance-completion-prosser.html"})',context);
+    assert.equal(context.window.location.href,'maintenance-completion-prosser.html');
+  }
 });
 
 test('rejects the old corrective snapshot instead of relabeling it as non-PM', () => {
