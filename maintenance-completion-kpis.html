@@ -1,185 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Maintenance Completion KPIs</title>
-<meta name="description" content="Maintenance completion KPI snapshot, January–August 2026. Corrective and preventive maintenance trends.">
-<style>
-html, body { width:100%; height:100%; margin:0; padding:0; background:#f3f2f2; overflow:hidden; }
-svg { display:block; position:absolute; top:0; left:0; width:100%; height:100%; }
-</style>
-</head>
-<body>
-<!-- TV compatibility: pre-rendered SVG 1.1; no custom elements,
-     compressed bundles, CSS Grid, web fonts, or external resource requests.
-     The viewBox fits the complete 16:9 dashboard into the available viewport.
-     This is the uploaded September 14, 2026 snapshot, not a live Fiix feed.
-     Chart scale and data match the original export (60–100 percent).
-     An optional ES5 script reveals both graphs once over three seconds;
-     unsupported browsers retain the complete static dashboard. -->
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="dashboard-title dashboard-description">
-<title id="dashboard-title">Maintenance Completion KPIs</title>
-<desc id="dashboard-description">January through August 2026. Corrective completion target: 80 percent. Preventive maintenance completion target: 90 percent. August results: corrective 94.9 percent; preventive 70.1 percent. Chart scale: 60 to 100 percent. Snapshot as of September 14, 2026.</desc>
-<rect width="1920" height="1080" fill="#f3f2f2"/>
-<g font-family="Helvetica, Arial, sans-serif">
-<text x="48" y="77" font-size="44" font-weight="600" fill="#201e1d" text-anchor="start">Maintenance Completion</text>
-<text x="1872" y="77" font-size="28" font-weight="500" fill="#5c5856" text-anchor="end">January – August 2026  ·  As of September 14</text>
-<line x1="48" y1="110" x2="1872" y2="110" stroke="#201e1d" stroke-width="2"/>
-<g id="corrective">
-<text x="48" y="170" font-size="32" font-weight="600" fill="#201e1d" text-anchor="start">Corrective</text>
-<text x="48" y="210" font-size="22" font-weight="400" fill="#5c5856" text-anchor="start">Closed within 14 days</text>
-<text x="48" y="241" font-size="22" font-weight="400" fill="#5c5856" text-anchor="start">Target 80%</text>
-<text x="48" y="374" font-size="104" font-weight="700" fill="#201e1d" text-anchor="start" letter-spacing="-3">94.9%</text>
-<text x="48" y="417" font-size="22" font-weight="400" fill="#5c5856" text-anchor="start">August 2026</text>
-<g transform="translate(392 174) scale(0.9736842105)">
-<line x1="160" y1="280" x2="1440" y2="280" stroke="#201e1d" stroke-width="2"/>
-<line x1="160" y1="160" x2="1440" y2="160" stroke="#b9b4b1" stroke-width="2" stroke-dasharray="10 10"/>
-<text x="1440" y="150" font-size="22" font-weight="500" fill="#8a8582" text-anchor="end">Target 80%</text>
-<path d="M160.0,100.0L342.9,83.8 M342.9,83.8L525.7,78.4 M525.7,78.4L708.6,93.4 M708.6,93.4L891.4,63.4 M891.4,63.4L1074.3,77.2 M1074.3,77.2L1257.1,70.6 M1257.1,70.6L1440.0,70.6" fill="none" stroke="#201e1d" stroke-width="5" stroke-linecap="square"/>
-<rect x="148.0" y="88.0" width="24" height="24" fill="#201e1d" data-reveal-month="0"><title>January: 90.0%</title></rect>
-<text x="160.0" y="72.0" font-size="28" font-weight="600" fill="#201e1d" text-anchor="middle" data-reveal-month="0">90.0%</text>
-<text x="160.0" y="329" font-size="24" font-weight="500" fill="#201e1d" text-anchor="middle">January</text>
-<rect x="330.9" y="71.8" width="24" height="24" fill="#201e1d" data-reveal-month="1"><title>February: 92.7%</title></rect>
-<text x="342.9" y="55.8" font-size="28" font-weight="600" fill="#201e1d" text-anchor="middle" data-reveal-month="1">92.7%</text>
-<text x="342.9" y="329" font-size="24" font-weight="500" fill="#201e1d" text-anchor="middle">February</text>
-<rect x="513.7" y="66.4" width="24" height="24" fill="#201e1d" data-reveal-month="2"><title>March: 93.6%</title></rect>
-<text x="525.7" y="50.4" font-size="28" font-weight="600" fill="#201e1d" text-anchor="middle" data-reveal-month="2">93.6%</text>
-<text x="525.7" y="329" font-size="24" font-weight="500" fill="#201e1d" text-anchor="middle">March</text>
-<rect x="696.6" y="81.4" width="24" height="24" fill="#201e1d" data-reveal-month="3"><title>April: 91.1%</title></rect>
-<text x="708.6" y="65.4" font-size="28" font-weight="600" fill="#201e1d" text-anchor="middle" data-reveal-month="3">91.1%</text>
-<text x="708.6" y="329" font-size="24" font-weight="500" fill="#201e1d" text-anchor="middle">April</text>
-<rect x="879.4" y="51.4" width="24" height="24" fill="#201e1d" data-reveal-month="4"><title>May: 96.1%</title></rect>
-<text x="891.4" y="35.4" font-size="28" font-weight="600" fill="#201e1d" text-anchor="middle" data-reveal-month="4">96.1%</text>
-<text x="891.4" y="329" font-size="24" font-weight="500" fill="#201e1d" text-anchor="middle">May</text>
-<rect x="1062.3" y="65.2" width="24" height="24" fill="#201e1d" data-reveal-month="5"><title>June: 93.8%</title></rect>
-<text x="1074.3" y="49.2" font-size="28" font-weight="600" fill="#201e1d" text-anchor="middle" data-reveal-month="5">93.8%</text>
-<text x="1074.3" y="329" font-size="24" font-weight="500" fill="#201e1d" text-anchor="middle">June</text>
-<rect x="1245.1" y="58.6" width="24" height="24" fill="#201e1d" data-reveal-month="6"><title>July: 94.9%</title></rect>
-<text x="1257.1" y="42.6" font-size="28" font-weight="600" fill="#201e1d" text-anchor="middle" data-reveal-month="6">94.9%</text>
-<text x="1257.1" y="329" font-size="24" font-weight="500" fill="#201e1d" text-anchor="middle">July</text>
-<rect x="1428.0" y="58.6" width="24" height="24" fill="#201e1d" data-reveal-month="7"><title>August: 94.9%</title></rect>
-<text x="1440.0" y="42.6" font-size="28" font-weight="600" fill="#201e1d" text-anchor="middle" data-reveal-month="7">94.9%</text>
-<text x="1440.0" y="329" font-size="24" font-weight="500" fill="#201e1d" text-anchor="middle">August</text>
-</g></g>
-<line x1="48" y1="550" x2="1872" y2="550" stroke="#201e1d" stroke-width="2"/>
-<g id="preventive">
-<text x="48" y="610" font-size="32" font-weight="600" fill="#201e1d" text-anchor="start">Preventive (PM)</text>
-<text x="48" y="650" font-size="22" font-weight="400" fill="#5c5856" text-anchor="start">Closed within 30 days</text>
-<text x="48" y="681" font-size="22" font-weight="400" fill="#5c5856" text-anchor="start">Target 90%</text>
-<text x="48" y="814" font-size="104" font-weight="700" fill="#ec3013" text-anchor="start" letter-spacing="-3">70.1%</text>
-<text x="48" y="857" font-size="22" font-weight="400" fill="#5c5856" text-anchor="start">August 2026</text>
-<g transform="translate(392 614) scale(0.9736842105)">
-<line x1="160" y1="280" x2="1440" y2="280" stroke="#201e1d" stroke-width="2"/>
-<line x1="160" y1="100" x2="1440" y2="100" stroke="#b9b4b1" stroke-width="2" stroke-dasharray="10 10"/>
-<text x="1440" y="90" font-size="22" font-weight="500" fill="#8a8582" text-anchor="end">Target 90%</text>
-<path d="M267.1,100.0L342.9,65.2 M342.9,65.2L435.1,100.0" fill="none" stroke="#201e1d" stroke-width="5" stroke-linecap="square"/>
-<path d="M160.0,149.2L267.1,100.0 M435.1,100.0L525.7,134.2 M525.7,134.2L708.6,112.6 M708.6,112.6L891.4,199.6 M891.4,199.6L1074.3,123.4 M1074.3,123.4L1257.1,128.8 M1257.1,128.8L1440.0,219.4" fill="none" stroke="#ec3013" stroke-width="5" stroke-linecap="square"/>
-<rect x="148.0" y="137.2" width="24" height="24" fill="#ec3013" data-reveal-month="0"><title>January: 81.8%</title></rect>
-<text x="160.0" y="121.2" font-size="28" font-weight="600" fill="#ec3013" text-anchor="middle" data-reveal-month="0">81.8%</text>
-<text x="160.0" y="329" font-size="24" font-weight="500" fill="#201e1d" text-anchor="middle">January</text>
-<rect x="330.9" y="53.2" width="24" height="24" fill="#201e1d" data-reveal-month="1"><title>February: 95.8%</title></rect>
-<text x="342.9" y="37.2" font-size="28" font-weight="600" fill="#201e1d" text-anchor="middle" data-reveal-month="1">95.8%</text>
-<text x="342.9" y="329" font-size="24" font-weight="500" fill="#201e1d" text-anchor="middle">February</text>
-<rect x="513.7" y="122.2" width="24" height="24" fill="#ec3013" data-reveal-month="2"><title>March: 84.3%</title></rect>
-<text x="525.7" y="106.2" font-size="28" font-weight="600" fill="#ec3013" text-anchor="middle" data-reveal-month="2">84.3%</text>
-<text x="525.7" y="329" font-size="24" font-weight="500" fill="#201e1d" text-anchor="middle">March</text>
-<rect x="696.6" y="100.6" width="24" height="24" fill="#ec3013" data-reveal-month="3"><title>April: 87.9%</title></rect>
-<text x="708.6" y="84.6" font-size="28" font-weight="600" fill="#ec3013" text-anchor="middle" data-reveal-month="3">87.9%</text>
-<text x="708.6" y="329" font-size="24" font-weight="500" fill="#201e1d" text-anchor="middle">April</text>
-<rect x="879.4" y="187.6" width="24" height="24" fill="#ec3013" data-reveal-month="4"><title>May: 73.4%</title></rect>
-<text x="891.4" y="171.6" font-size="28" font-weight="600" fill="#ec3013" text-anchor="middle" data-reveal-month="4">73.4%</text>
-<text x="891.4" y="329" font-size="24" font-weight="500" fill="#201e1d" text-anchor="middle">May</text>
-<rect x="1062.3" y="111.4" width="24" height="24" fill="#ec3013" data-reveal-month="5"><title>June: 86.1%</title></rect>
-<text x="1074.3" y="95.4" font-size="28" font-weight="600" fill="#ec3013" text-anchor="middle" data-reveal-month="5">86.1%</text>
-<text x="1074.3" y="329" font-size="24" font-weight="500" fill="#201e1d" text-anchor="middle">June</text>
-<rect x="1245.1" y="116.8" width="24" height="24" fill="#ec3013" data-reveal-month="6"><title>July: 85.2%</title></rect>
-<text x="1257.1" y="100.8" font-size="28" font-weight="600" fill="#ec3013" text-anchor="middle" data-reveal-month="6">85.2%</text>
-<text x="1257.1" y="329" font-size="24" font-weight="500" fill="#201e1d" text-anchor="middle">July</text>
-<rect x="1428.0" y="207.4" width="24" height="24" fill="#ec3013" data-reveal-month="7"><title>August: 70.1%</title></rect>
-<text x="1440.0" y="191.4" font-size="28" font-weight="600" fill="#ec3013" text-anchor="middle" data-reveal-month="7">70.1%</text>
-<text x="1440.0" y="329" font-size="24" font-weight="500" fill="#201e1d" text-anchor="middle">August</text>
-</g></g>
-<line x1="48" y1="990" x2="1872" y2="990" stroke="#201e1d" stroke-width="2"/>
-<text x="48" y="1027" font-size="19" font-weight="400" fill="#5c5856" text-anchor="start">Corrective orders get 14 calendar days from creation (or the recorded due date if later); PMs get 30 days. Work finished the next month counts</text>
-<text x="48" y="1053" font-size="19" font-weight="400" fill="#5c5856" text-anchor="start">toward the month created. Rejected and cancelled orders are excluded; open or late work is not on time.</text>
-<text x="1872" y="1027" font-size="19" font-weight="400" fill="#5c5856" text-anchor="end">Source: Fiix · Looker</text>
-</g></svg>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Maintenance Completion KPIs</title><meta name="description" content="Daily maintenance completion, monthly totals and overdue work."><style>html,body{width:100%;height:100%;margin:0;padding:0;background:#f3f2f2;overflow:hidden}svg{display:block;position:absolute;top:0;left:0;width:100%;height:100%}a{cursor:pointer}</style></head><body>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="dashboard-title dashboard-description" data-updated="2026-09-15T01:20:24Z" data-site="All">
+<title id="dashboard-title">Maintenance Completion KPIs — Both sites</title><desc id="dashboard-description">Last updated Monday, September 14. Selected maintenance crew. Twelve months of on-time completion, created counts and overdue work. Shaded months are still in progress. Charts use a zero to 100 percent scale.</desc><rect width="1920" height="1080" fill="#f3f2f2"/><g font-family="Helvetica, Arial, sans-serif"><text x="48" y="76" font-size="44" fill="#201e1d" text-anchor="start" font-weight="600">Maintenance Completion</text><text x="1872" y="76" font-size="27" fill="#5c5856" text-anchor="end" >Last updated Monday, September 14</text><line x1="48" y1="107" x2="1872" y2="107" stroke="#201e1d" stroke-width="2"/><a xlink:href="maintenance-completion-kpis.html" aria-label="Show Both sites"><text x="48" y="145" font-size="23" fill="#201e1d" text-anchor="start" font-weight="700" text-decoration="underline">Both sites</text></a><a xlink:href="maintenance-completion-grandview.html" aria-label="Show Grandview"><text x="223" y="145" font-size="23" fill="#5c5856" text-anchor="start" >Grandview</text></a><a xlink:href="maintenance-completion-prosser.html" aria-label="Show Prosser"><text x="398" y="145" font-size="23" fill="#5c5856" text-anchor="start" >Prosser</text></a><text x="900" y="145" font-size="21" fill="#5c5856" text-anchor="middle" >Selected maintenance crew · Rolling 12 months</text><rect x="1490" y="125" width="24" height="24" fill="#eee1c3"/><text x="1526" y="145" font-size="23" fill="#201e1d" text-anchor="start" >Still in progress</text><g id="corrective"><text x="48" y="198" font-size="32" fill="#201e1d" text-anchor="start" font-weight="600">Corrective</text><text x="48" y="232" font-size="21" fill="#5c5856" text-anchor="start" >On-time completion · Target 80%</text><text x="44" y="331" font-size="88" fill="#201e1d" text-anchor="start" font-weight="700" letter-spacing="-3">92.7%</text><text x="48" y="367" font-size="23" fill="#5c5856" text-anchor="start" >September 2026 · So far</text><text x="48" y="399" font-size="23" fill="#201e1d" text-anchor="start" >82 created · 76 on time</text><text x="48" y="431" font-size="23" fill="#201e1d" text-anchor="start" >5 still open this month</text><text x="48" y="488" font-size="31" fill="#ec3013" text-anchor="start" font-weight="700">6 overdue</text><text x="48" y="517" font-size="20" fill="#5c5856" text-anchor="start" >In the 12 months shown</text><rect data-provisional-month="2026-08" x="1660" y="211" width="120" height="271" fill="#eee1c3"><title>2026-08 · Still in progress — numbers can change</title></rect><rect data-provisional-month="2026-09" x="1780" y="211" width="120" height="271" fill="#eee1c3"><title>2026-09 · Still in progress — numbers can change</title></rect><line x1="460" y1="466" x2="1900" y2="466" stroke="#201e1d" stroke-width="2"/><text x="446" y="473" font-size="18" fill="#5c5856" text-anchor="end" >0%</text><line x1="460" y1="356" x2="1900" y2="356" stroke="#d0cbc7" stroke-width="1"/><text x="446" y="363" font-size="18" fill="#5c5856" text-anchor="end" >50%</text><line x1="460" y1="246" x2="1900" y2="246" stroke="#d0cbc7" stroke-width="1"/><text x="446" y="253" font-size="18" fill="#5c5856" text-anchor="end" >100%</text><line x1="460" y1="290" x2="1900" y2="290" stroke="#8a8582" stroke-width="2" stroke-dasharray="8 8"/><path class="trend-line" d="M743.68,290L760,282.67 M760,282.67L880,246 M880,246L1000,253.72 M1000,253.72L1120,257.46 M1120,257.46L1240,263.6 M1240,263.6L1360,253.86 M1360,253.86L1480,254.86 M1480,254.86L1600,255.06 M1600,255.06L1720,254.89 M1720,254.89L1840,262.1" fill="none" stroke="#201e1d" stroke-width="5" stroke-linecap="round"/><path class="trend-line" d="M520,329.81L640,336.59 M640,336.59L743.68,290" fill="none" stroke="#ec3013" stroke-width="5" stroke-linecap="round"/><rect x="513" y="322.81" width="14" height="14" fill="#ec3013" data-reveal-x="520"><title>2025-10: 61.9%; 13 on time out of 21 created</title></rect><text x="520" y="310.81" font-size="22" fill="#ec3013" text-anchor="middle" font-weight="600" data-reveal-x="520">61.9%</text><text x="520" y="503" font-size="23" fill="#201e1d" text-anchor="middle" >Oct</text><text x="520" y="526" font-size="17" fill="#5c5856" text-anchor="middle" >2025</text><text x="520" y="558" font-size="22" fill="#201e1d" text-anchor="middle" data-created-month="2025-10">21</text><rect x="633" y="329.59" width="14" height="14" fill="#ec3013" data-reveal-x="640"><title>2025-11: 58.8%; 10 on time out of 17 created</title></rect><text x="640" y="317.59" font-size="22" fill="#ec3013" text-anchor="middle" font-weight="600" data-reveal-x="640">58.8%</text><text x="640" y="503" font-size="23" fill="#201e1d" text-anchor="middle" >Nov</text><text x="640" y="526" font-size="17" fill="#5c5856" text-anchor="middle" >2025</text><text x="640" y="558" font-size="22" fill="#201e1d" text-anchor="middle" data-created-month="2025-11">17</text><rect x="753" y="275.67" width="14" height="14" fill="#201e1d" data-reveal-x="760"><title>2025-12: 83.3%; 15 on time out of 18 created</title></rect><text x="760" y="263.67" font-size="22" fill="#201e1d" text-anchor="middle" font-weight="600" data-reveal-x="760">83.3%</text><text x="760" y="503" font-size="23" fill="#201e1d" text-anchor="middle" >Dec</text><text x="760" y="526" font-size="17" fill="#5c5856" text-anchor="middle" >2025</text><text x="760" y="558" font-size="22" fill="#201e1d" text-anchor="middle" data-created-month="2025-12">18</text><rect x="873" y="239" width="14" height="14" fill="#201e1d" data-reveal-x="880"><title>2026-01: 100.0%; 20 on time out of 20 created</title></rect><text x="880" y="227" font-size="22" fill="#201e1d" text-anchor="middle" font-weight="600" data-reveal-x="880">100.0%</text><text x="880" y="503" font-size="23" fill="#201e1d" text-anchor="middle" >Jan</text><text x="880" y="526" font-size="17" fill="#5c5856" text-anchor="middle" >2026</text><text x="880" y="558" font-size="22" fill="#201e1d" text-anchor="middle" data-created-month="2026-01">20</text><rect x="993" y="246.72" width="14" height="14" fill="#201e1d" data-reveal-x="1000"><title>2026-02: 96.5%; 55 on time out of 57 created</title></rect><text x="1000" y="234.72" font-size="22" fill="#201e1d" text-anchor="middle" font-weight="600" data-reveal-x="1000">96.5%</text><text x="1000" y="503" font-size="23" fill="#201e1d" text-anchor="middle" >Feb</text><text x="1000" y="526" font-size="17" fill="#5c5856" text-anchor="middle" >2026</text><text x="1000" y="558" font-size="22" fill="#201e1d" text-anchor="middle" data-created-month="2026-02">57</text><rect x="1113" y="250.46" width="14" height="14" fill="#201e1d" data-reveal-x="1120"><title>2026-03: 94.8%; 91 on time out of 96 created</title></rect><text x="1120" y="238.46" font-size="22" fill="#201e1d" text-anchor="middle" font-weight="600" data-reveal-x="1120">94.8%</text><text x="1120" y="503" font-size="23" fill="#201e1d" text-anchor="middle" >Mar</text><text x="1120" y="526" font-size="17" fill="#5c5856" text-anchor="middle" >2026</text><text x="1120" y="558" font-size="22" fill="#201e1d" text-anchor="middle" data-created-month="2026-03">96</text><rect x="1233" y="256.6" width="14" height="14" fill="#201e1d" data-reveal-x="1240"><title>2026-04: 92.0%; 69 on time out of 75 created</title></rect><text x="1240" y="244.6" font-size="22" fill="#201e1d" text-anchor="middle" font-weight="600" data-reveal-x="1240">92.0%</text><text x="1240" y="503" font-size="23" fill="#201e1d" text-anchor="middle" >Apr</text><text x="1240" y="526" font-size="17" fill="#5c5856" text-anchor="middle" >2026</text><text x="1240" y="558" font-size="22" fill="#201e1d" text-anchor="middle" data-created-month="2026-04">75</text><rect x="1353" y="246.86" width="14" height="14" fill="#201e1d" data-reveal-x="1360"><title>2026-05: 96.4%; 108 on time out of 112 created</title></rect><text x="1360" y="234.86" font-size="22" fill="#201e1d" text-anchor="middle" font-weight="600" data-reveal-x="1360">96.4%</text><text x="1360" y="503" font-size="23" fill="#201e1d" text-anchor="middle" >May</text><text x="1360" y="526" font-size="17" fill="#5c5856" text-anchor="middle" >2026</text><text x="1360" y="558" font-size="22" fill="#201e1d" text-anchor="middle" data-created-month="2026-05">112</text><rect x="1473" y="247.86" width="14" height="14" fill="#201e1d" data-reveal-x="1480"><title>2026-06: 96.0%; 143 on time out of 149 created</title></rect><text x="1480" y="235.86" font-size="22" fill="#201e1d" text-anchor="middle" font-weight="600" data-reveal-x="1480">96.0%</text><text x="1480" y="503" font-size="23" fill="#201e1d" text-anchor="middle" >Jun</text><text x="1480" y="526" font-size="17" fill="#5c5856" text-anchor="middle" >2026</text><text x="1480" y="558" font-size="22" fill="#201e1d" text-anchor="middle" data-created-month="2026-06">149</text><rect x="1593" y="248.06" width="14" height="14" fill="#201e1d" data-reveal-x="1600"><title>2026-07: 95.9%; 163 on time out of 170 created</title></rect><text x="1600" y="236.06" font-size="22" fill="#201e1d" text-anchor="middle" font-weight="600" data-reveal-x="1600">95.9%</text><text x="1600" y="503" font-size="23" fill="#201e1d" text-anchor="middle" >Jul</text><text x="1600" y="526" font-size="17" fill="#5c5856" text-anchor="middle" >2026</text><text x="1600" y="558" font-size="22" fill="#201e1d" text-anchor="middle" data-created-month="2026-07">170</text><rect x="1713" y="247.89" width="14" height="14" fill="#201e1d" data-reveal-x="1720"><title>2026-08: 96.0%; 95 on time out of 99 created</title></rect><text x="1720" y="235.89" font-size="22" fill="#201e1d" text-anchor="middle" font-weight="600" data-reveal-x="1720">96.0%</text><text x="1720" y="503" font-size="23" fill="#201e1d" text-anchor="middle" >Aug</text><text x="1720" y="526" font-size="17" fill="#5c5856" text-anchor="middle" >2026</text><text x="1720" y="558" font-size="22" fill="#201e1d" text-anchor="middle" data-created-month="2026-08">99</text><rect x="1833" y="255.1" width="14" height="14" fill="#201e1d" data-reveal-x="1840"><title>2026-09: 92.7%; 76 on time out of 82 created</title></rect><text x="1840" y="243.1" font-size="22" fill="#201e1d" text-anchor="middle" font-weight="600" data-reveal-x="1840">92.7%</text><text x="1840" y="503" font-size="23" fill="#201e1d" text-anchor="middle" >Sep</text><text x="1840" y="526" font-size="17" fill="#5c5856" text-anchor="middle" >2026</text><text x="1840" y="558" font-size="22" fill="#201e1d" text-anchor="middle" data-created-month="2026-09">82</text><text x="450" y="558" font-size="19" fill="#5c5856" text-anchor="end" >Created</text></g><line x1="48" y1="581" x2="1872" y2="581" stroke="#201e1d" stroke-width="2"/><g id="preventive"><text x="48" y="622" font-size="32" fill="#201e1d" text-anchor="start" font-weight="600">Preventive (PM)</text><text x="48" y="656" font-size="21" fill="#5c5856" text-anchor="start" >On-time completion · Target 90%</text><text x="44" y="755" font-size="88" fill="#ec3013" text-anchor="start" font-weight="700" letter-spacing="-3">70.9%</text><text x="48" y="791" font-size="23" fill="#5c5856" text-anchor="start" >September 2026 · So far</text><text x="48" y="823" font-size="23" fill="#201e1d" text-anchor="start" >220 created · 156 on time</text><text x="48" y="855" font-size="23" fill="#201e1d" text-anchor="start" >64 still open this month</text><text x="48" y="912" font-size="31" fill="#ec3013" text-anchor="start" font-weight="700">25 overdue</text><text x="48" y="941" font-size="20" fill="#5c5856" text-anchor="start" >In the 12 months shown</text><rect data-provisional-month="2026-08" x="1660" y="635" width="120" height="271" fill="#eee1c3"><title>2026-08 · Still in progress — numbers can change</title></rect><rect data-provisional-month="2026-09" x="1780" y="635" width="120" height="271" fill="#eee1c3"><title>2026-09 · Still in progress — numbers can change</title></rect><line x1="460" y1="890" x2="1900" y2="890" stroke="#201e1d" stroke-width="2"/><text x="446" y="897" font-size="18" fill="#5c5856" text-anchor="end" >0%</text><line x1="460" y1="780" x2="1900" y2="780" stroke="#d0cbc7" stroke-width="1"/><text x="446" y="787" font-size="18" fill="#5c5856" text-anchor="end" >50%</text><line x1="460" y1="670" x2="1900" y2="670" stroke="#d0cbc7" stroke-width="1"/><text x="446" y="677" font-size="18" fill="#5c5856" text-anchor="end" >100%</text><line x1="460" y1="692" x2="1900" y2="692" stroke="#8a8582" stroke-width="2" stroke-dasharray="8 8"/><path class="trend-line" d="M949.89,692L1000,676.23 M1000,676.23L1087.19,692 M1285.41,692L1360,684 M1360,684L1480,689.13 M1480,689.13L1600,687 M1600,687L1646.97,692" fill="none" stroke="#201e1d" stroke-width="5" stroke-linecap="round"/><path class="trend-line" d="M520,745.12L640,728.67 M640,728.67L760,807.5 M760,807.5L880,714 M880,714L949.89,692 M1087.19,692L1120,697.94 M1120,697.94L1240,696.87 M1240,696.87L1285.41,692 M1646.97,692L1720,699.77 M1720,699.77L1840,734" fill="none" stroke="#ec3013" stroke-width="5" stroke-linecap="round"/><rect x="513" y="738.12" width="14" height="14" fill="#ec3013" data-reveal-x="520"><title>2025-10: 65.9%; 27 on time out of 41 created</title></rect><text x="520" y="726.12" font-size="22" fill="#ec3013" text-anchor="middle" font-weight="600" data-reveal-x="520">65.9%</text><text x="520" y="927" font-size="23" fill="#201e1d" text-anchor="middle" >Oct</text><text x="520" y="950" font-size="17" fill="#5c5856" text-anchor="middle" >2025</text><text x="520" y="982" font-size="22" fill="#201e1d" text-anchor="middle" data-created-month="2025-10">41</text><rect x="633" y="721.67" width="14" height="14" fill="#ec3013" data-reveal-x="640"><title>2025-11: 73.3%; 33 on time out of 45 created</title></rect><text x="640" y="709.67" font-size="22" fill="#ec3013" text-anchor="middle" font-weight="600" data-reveal-x="640">73.3%</text><text x="640" y="927" font-size="23" fill="#201e1d" text-anchor="middle" >Nov</text><text x="640" y="950" font-size="17" fill="#5c5856" text-anchor="middle" >2025</text><text x="640" y="982" font-size="22" fill="#201e1d" text-anchor="middle" data-created-month="2025-11">45</text><rect x="753" y="800.5" width="14" height="14" fill="#ec3013" data-reveal-x="760"><title>2025-12: 37.5%; 21 on time out of 56 created</title></rect><text x="760" y="788.5" font-size="22" fill="#ec3013" text-anchor="middle" font-weight="600" data-reveal-x="760">37.5%</text><text x="760" y="927" font-size="23" fill="#201e1d" text-anchor="middle" >Dec</text><text x="760" y="950" font-size="17" fill="#5c5856" text-anchor="middle" >2025</text><text x="760" y="982" font-size="22" fill="#201e1d" text-anchor="middle" data-created-month="2025-12">56</text><rect x="873" y="707" width="14" height="14" fill="#ec3013" data-reveal-x="880"><title>2026-01: 80.0%; 48 on time out of 60 created</title></rect><text x="880" y="695" font-size="22" fill="#ec3013" text-anchor="middle" font-weight="600" data-reveal-x="880">80.0%</text><text x="880" y="927" font-size="23" fill="#201e1d" text-anchor="middle" >Jan</text><text x="880" y="950" font-size="17" fill="#5c5856" text-anchor="middle" >2026</text><text x="880" y="982" font-size="22" fill="#201e1d" text-anchor="middle" data-created-month="2026-01">60</text><rect x="993" y="669.23" width="14" height="14" fill="#201e1d" data-reveal-x="1000"><title>2026-02: 97.2%; 103 on time out of 106 created</title></rect><text x="1000" y="657.23" font-size="22" fill="#201e1d" text-anchor="middle" font-weight="600" data-reveal-x="1000">97.2%</text><text x="1000" y="927" font-size="23" fill="#201e1d" text-anchor="middle" >Feb</text><text x="1000" y="950" font-size="17" fill="#5c5856" text-anchor="middle" >2026</text><text x="1000" y="982" font-size="22" fill="#201e1d" text-anchor="middle" data-created-month="2026-02">106</text><rect x="1113" y="690.94" width="14" height="14" fill="#ec3013" data-reveal-x="1120"><title>2026-03: 87.3%; 165 on time out of 189 created</title></rect><text x="1120" y="678.94" font-size="22" fill="#ec3013" text-anchor="middle" font-weight="600" data-reveal-x="1120">87.3%</text><text x="1120" y="927" font-size="23" fill="#201e1d" text-anchor="middle" >Mar</text><text x="1120" y="950" font-size="17" fill="#5c5856" text-anchor="middle" >2026</text><text x="1120" y="982" font-size="22" fill="#201e1d" text-anchor="middle" data-created-month="2026-03">189</text><rect x="1233" y="689.87" width="14" height="14" fill="#ec3013" data-reveal-x="1240"><title>2026-04: 87.8%; 115 on time out of 131 created</title></rect><text x="1240" y="677.87" font-size="22" fill="#ec3013" text-anchor="middle" font-weight="600" data-reveal-x="1240">87.8%</text><text x="1240" y="927" font-size="23" fill="#201e1d" text-anchor="middle" >Apr</text><text x="1240" y="950" font-size="17" fill="#5c5856" text-anchor="middle" >2026</text><text x="1240" y="982" font-size="22" fill="#201e1d" text-anchor="middle" data-created-month="2026-04">131</text><rect x="1353" y="677" width="14" height="14" fill="#201e1d" data-reveal-x="1360"><title>2026-05: 93.6%; 103 on time out of 110 created</title></rect><text x="1360" y="665" font-size="22" fill="#201e1d" text-anchor="middle" font-weight="600" data-reveal-x="1360">93.6%</text><text x="1360" y="927" font-size="23" fill="#201e1d" text-anchor="middle" >May</text><text x="1360" y="950" font-size="17" fill="#5c5856" text-anchor="middle" >2026</text><text x="1360" y="982" font-size="22" fill="#201e1d" text-anchor="middle" data-created-month="2026-05">110</text><rect x="1473" y="682.13" width="14" height="14" fill="#201e1d" data-reveal-x="1480"><title>2026-06: 91.3%; 189 on time out of 207 created</title></rect><text x="1480" y="670.13" font-size="22" fill="#201e1d" text-anchor="middle" font-weight="600" data-reveal-x="1480">91.3%</text><text x="1480" y="927" font-size="23" fill="#201e1d" text-anchor="middle" >Jun</text><text x="1480" y="950" font-size="17" fill="#5c5856" text-anchor="middle" >2026</text><text x="1480" y="982" font-size="22" fill="#201e1d" text-anchor="middle" data-created-month="2026-06">207</text><rect x="1593" y="680" width="14" height="14" fill="#201e1d" data-reveal-x="1600"><title>2026-07: 92.3%; 203 on time out of 220 created</title></rect><text x="1600" y="668" font-size="22" fill="#201e1d" text-anchor="middle" font-weight="600" data-reveal-x="1600">92.3%</text><text x="1600" y="927" font-size="23" fill="#201e1d" text-anchor="middle" >Jul</text><text x="1600" y="950" font-size="17" fill="#5c5856" text-anchor="middle" >2026</text><text x="1600" y="982" font-size="22" fill="#201e1d" text-anchor="middle" data-created-month="2026-07">220</text><rect x="1713" y="692.77" width="14" height="14" fill="#ec3013" data-reveal-x="1720"><title>2026-08: 86.5%; 230 on time out of 266 created</title></rect><text x="1720" y="680.77" font-size="22" fill="#ec3013" text-anchor="middle" font-weight="600" data-reveal-x="1720">86.5%</text><text x="1720" y="927" font-size="23" fill="#201e1d" text-anchor="middle" >Aug</text><text x="1720" y="950" font-size="17" fill="#5c5856" text-anchor="middle" >2026</text><text x="1720" y="982" font-size="22" fill="#201e1d" text-anchor="middle" data-created-month="2026-08">266</text><rect x="1833" y="727" width="14" height="14" fill="#ec3013" data-reveal-x="1840"><title>2026-09: 70.9%; 156 on time out of 220 created</title></rect><text x="1840" y="715" font-size="22" fill="#ec3013" text-anchor="middle" font-weight="600" data-reveal-x="1840">70.9%</text><text x="1840" y="927" font-size="23" fill="#201e1d" text-anchor="middle" >Sep</text><text x="1840" y="950" font-size="17" fill="#5c5856" text-anchor="middle" >2026</text><text x="1840" y="982" font-size="22" fill="#201e1d" text-anchor="middle" data-created-month="2026-09">220</text><text x="450" y="982" font-size="19" fill="#5c5856" text-anchor="end" >Created</text></g><line x1="48" y1="1001" x2="1872" y2="1001" stroke="#201e1d" stroke-width="2"/><text x="48" y="1031" font-size="20" fill="#5c5856" text-anchor="start" >PMs get 30 days. Corrective jobs get 14 days, or the recorded due date if later. Jobs count in the month created.</text><text x="48" y="1060" font-size="20" fill="#5c5856" text-anchor="start" >Shaded months can change. Closing a late job clears open work, but does not raise the on-time %. Rejected and cancelled jobs are left out.</text><text x="1872" y="1031" font-size="20" fill="#5c5856" text-anchor="end" >Source: Fiix</text></g></svg>
 <script>
-/* Optional one-time reveal. ES5 syntax and SVG 1.1 attributes for older TVs.
-   All values remain in the HTML as a static fallback if JavaScript is off. */
-(function () {
+(function browserEnhancement() {
   if (!document.querySelectorAll) { return; }
-  var paths = document.querySelectorAll('path');
-  var marks = document.querySelectorAll('[data-reveal-month]');
-  var originals = [], coordinates = [], months = [];
-  var duration = 3000, started, stopped = false;
-  var requestFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
-  var i, j;
-
-  function finish() {
-    stopped = true;
-    for (i = 0; i < originals.length; i += 1) {
-      paths[i].setAttribute('d', originals[i]);
+  function animate() {
+    var paths=document.querySelectorAll('.trend-line'), marks=document.querySelectorAll('[data-reveal-x]');
+    var originals=[],coordinates=[],started=new Date().getTime(),duration=3000,stopped=false;
+    var requestFrame=window.requestAnimationFrame || window.webkitRequestAnimationFrame;
+    var i,j;
+    function finish() {
+      stopped=true;
+      for (i=0;i<originals.length;i+=1) { paths[i].setAttribute('d',originals[i]); }
+      for (i=0;i<marks.length;i+=1) { marks[i].removeAttribute('opacity'); }
     }
-    for (i = 0; i < marks.length; i += 1) {
-      marks[i].removeAttribute('opacity');
-    }
-  }
-
-  function frame() {
-    if (stopped) { return; }
-    try {
-      var elapsed = Math.max(0, new Date().getTime() - started);
-      if (elapsed >= duration) { finish(); return; }
-      var progress = elapsed / duration;
-      var edge = 160 + 1280 * progress;
-      for (i = 0; i < paths.length; i += 1) {
-        var numbers = coordinates[i], drawing = '';
-        for (j = 0; j < numbers.length; j += 4) {
-          var ax = numbers[j], ay = numbers[j + 1];
-          var bx = numbers[j + 2], by = numbers[j + 3];
-          if (edge <= ax) { continue; }
-          var endX = Math.min(edge, bx);
-          var endY = ay + (by - ay) * (endX - ax) / (bx - ax);
-          drawing += 'M' + ax + ',' + ay + 'L' + endX.toFixed(1) + ',' + endY.toFixed(1) + ' ';
+    function frame() {
+      if (stopped) { return; }
+      try {
+        var elapsed=Math.max(0,new Date().getTime()-started);
+        if (elapsed >= duration) { finish(); return; }
+        var progress=elapsed/duration,edge=520+1320*progress;
+        for (i=0;i<paths.length;i+=1) {
+          var numbers=coordinates[i],drawing='';
+          for (j=0;j<numbers.length;j+=4) {
+            var ax=numbers[j],ay=numbers[j+1],bx=numbers[j+2],by=numbers[j+3];
+            if (edge <= ax) { continue; }
+            var endX=Math.min(edge,bx),endY=ay+(by-ay)*(endX-ax)/(bx-ax);
+            drawing+='M'+ax+','+ay+'L'+endX.toFixed(2)+','+endY.toFixed(2)+' ';
+          }
+          paths[i].setAttribute('d',drawing);
         }
-        paths[i].setAttribute('d', drawing);
-      }
-      for (i = 0; i < marks.length; i += 1) {
-        var opacity = Math.min(1, Math.max(0, (progress * 7 - months[i]) * 3 + 1));
-        marks[i].setAttribute('opacity', opacity);
-      }
-      // Match the display refresh (60 FPS on a 60 Hz TV).
-      // Older engines without requestAnimationFrame use a ~60 FPS timer.
-      if (requestFrame) {
-        requestFrame.call(window, frame);
-      } else {
-        setTimeout(frame, Math.min(1000 / 60, duration - elapsed));
-      }
-    } catch (error) {
-      finish();
+        for (i=0;i<marks.length;i+=1) { marks[i].setAttribute('opacity',Math.min(1,Math.max(0,(edge-Number(marks[i].getAttribute('data-reveal-x'))+20)/40))); }
+        if (requestFrame) { requestFrame.call(window,frame); } else { window.setTimeout(frame,1000/60); }
+      } catch (error) { finish(); }
     }
+    try {
+      for (i=0;i<paths.length;i+=1) {
+        var original=paths[i].getAttribute('d'),matches=original.match(/-?\d+(?:\.\d+)?/g),values=[];
+        originals.push(original);
+        for (j=0;j<matches.length;j+=1) { values.push(Number(matches[j])); }
+        coordinates.push(values);
+      }
+      frame();
+      window.setTimeout(finish,duration+100);
+    } catch (error) { finish(); }
   }
-
-  try {
-    for (i = 0; i < paths.length; i += 1) {
-      var original = paths[i].getAttribute('d');
-      originals.push(original);
-      var matches = original.match(/-?\d+(?:\.\d+)?/g);
-      var values = [];
-      for (j = 0; j < matches.length; j += 1) { values.push(Number(matches[j])); }
-      coordinates.push(values);
-    }
-    for (i = 0; i < marks.length; i += 1) {
-      months.push(Number(marks[i].getAttribute('data-reveal-month')));
-    }
-    started = new Date().getTime();
-    frame();
-  } catch (error) {
-    finish();
+  animate();
+  // Check for a newer successful data update. An error leaves the last good screen intact.
+  function refresh() {
+    if (!window.XMLHttpRequest || window.location.protocol === 'file:') { return; }
+    try {
+      var xhr=new XMLHttpRequest();
+      xhr.open('GET',window.location.pathname+'?refresh='+new Date().getTime(),true);
+      xhr.timeout=30000;
+      xhr.onreadystatechange=function () {
+        if (xhr.readyState !== 4 || xhr.status !== 200) { return; }
+        try {
+          var holder=document.createElement('div');
+          holder.innerHTML=xhr.responseText;
+          var next=holder.querySelector('svg[data-updated]'),old=document.querySelector('svg[data-updated]');
+          if (!next || !old) { return; }
+          var token=next.getAttribute('data-updated'),current=old.getAttribute('data-updated');
+          if (token && token !== current && next.getAttribute('data-site') === old.getAttribute('data-site')) {
+            old.parentNode.replaceChild(next,old);
+            animate();
+          }
+        } catch (error) { /* Keep the last successful update. */ }
+      };
+      xhr.send(null);
+    } catch (error) { /* Keep the last successful update. */ }
   }
-}());
+  window.setInterval(refresh,900000);
+})();
 </script>
-</body>
-</html>
+</body></html>
