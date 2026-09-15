@@ -10,13 +10,13 @@ function label(x,y,value,size=22,color=INK,anchor='start',extra='') {
 }
 function validate(data, site) {
   if (!['All','Grandview','Prosser'].includes(site)) throw new Error('Unknown site');
-  if (!data || data.schema_version !== 1 || !Array.isArray(data.months)) throw new Error('Expected schema_version 1 and monthly data');
+  if (!data || data.schema_version !== 2 || !Array.isArray(data.months)) throw new Error('Expected schema_version 2 PM/non-PM monthly data');
   if (!/^\d{4}-\d{2}-\d{2}$/.test(data.as_of_date) || !Number.isFinite(Date.parse(data.as_of_date)) || new Date(data.as_of_date).toISOString().slice(0,10) !== data.as_of_date) throw new Error('Invalid as_of_date');
   if (!/^\d{4}-\d{2}-\d{2}T[\d:.]+Z$/.test(data.updated_at) || !Number.isFinite(Date.parse(data.updated_at))) throw new Error('Invalid updated_at');
   const rows = data.months.filter(r => r.site === site);
   const [year, month] = data.as_of_date.split('-').map(Number);
   const expected = Array.from({length:12}, (_,i) => new Date(Date.UTC(year,month-12+i,1)).toISOString().slice(0,7));
-  for (const type of ['Corrective','PM']) for (const date of expected) {
+  for (const type of ['Non-PM','PM']) for (const date of expected) {
     const matches = rows.filter(r => r.type === type && r.month === date);
     if (matches.length !== 1) throw new Error('Expected exactly 12 monthly rows per type/site; missing or duplicate '+type+' '+date);
     const row = matches[0];
@@ -33,12 +33,14 @@ function validate(data, site) {
 function chart(data,site,type,months,top) {
   const rows = months.map(month => data.months.find(r => r.site === site && r.type === type && r.month === month));
   const latest = rows[rows.length-1], target = type === 'PM' ? 0.9 : 0.8;
-  const left = 520, right = 1840, step = (right-left)/11, graphTop = top+58, base = top+318, height = base-graphTop;
+  const isPM = type === 'PM';
+  const left = 520, right = 1840, step = (right-left)/11;
+  const graphTop = top+(isPM ? 58:40), base = top+(isPM ? 318:187), height = base-graphTop;
   const percent = row => row.completion_pct === null ? '—' : (row.completion_pct *100).toFixed(1)+'%';
   const currentMonth = MONTHS[Number(latest.month.slice(5))-1];
   const overdue = rows.reduce((sum,r) => sum+r.overdue,0);
-  let out = `<g id="${type === 'PM' ? 'preventive':'corrective'}">`;
-  out += label(48,top+10,type === 'PM' ? 'Preventive (PM)' : 'Corrective',32,INK,'start','font-weight="600"');
+  let out = `<g id="${isPM ? 'preventive':'non-pm'}">`;
+  out += label(48,top+10,isPM ? 'Preventive (PM)' : 'Non-PM Work',32,INK,'start','font-weight="600"');
   out += label(48,top+44,'On-time completion · Target '+target*100+'%',21,MUTED);
   out += label(44,top+143,percent(latest),88,latest.completion_pct !== null && latest.completion_pct < target ? RED : INK,'start','font-weight="700" letter-spacing="-3"');
   out += label(48,top+179,currentMonth+' · So far',23,MUTED);
@@ -78,7 +80,35 @@ function chart(data,site,type,months,top) {
       out += `<rect x="${x-7}" y="${num(y-7)}" width="14" height="14" fill="${color}" data-reveal-x="${x}"><title>${esc(MONTHS[m]+': '+percent(row))}</title></rect>`;
       out += label(x,num(y-19),percent(row),22,color,'middle',`font-weight="600" data-reveal-x="${x}"`);
     } else out += label(x,base-15,'—',22,MUTED,'middle');
-    out += label(x,top+355,MONTHS[m].slice(0,3),23,INK,'middle');
+    out += label(x,top+(isPM ? 355:363),MONTHS[m].slice(0,3),23,INK,'middle');
+  });
+  if (!isPM) out += createdTrend(rows,top,left,right,step,data.as_of_date.slice(0,7));
+  return out+'</g>';
+}
+
+function createdTrend(rows,top,left,right,step,currentMonth) {
+  const graphTop=top+264, base=top+330, height=base-graphTop;
+  const maxCount=Math.max(...rows.map(r=>r.created));
+  const unit=maxCount<=10 ? 5:maxCount<=100 ? 25:100;
+  const ceiling=Math.max(unit,Math.ceil(maxCount/unit)*unit);
+  let out='<g id="non-pm-created-trend">';
+  out+=label(left-step/2,top+224,'Non-PM jobs created',22,INK,'start','font-weight="600"');
+  out+=label(right+step/2,top+224,'Current month is still growing',20,MUTED,'end');
+  rows.forEach((row,i)=>{
+    if(row.month===currentMonth) out+=`<rect data-count-provisional-month="${row.month}" x="${num(left+i*step-step/2)}" y="${graphTop-35}" width="${step}" height="${height+47}" fill="#eee1c3"><title>Current month is not finished; more jobs can be created.</title></rect>`;
+  });
+  for(const count of [0,ceiling]) {
+    const y=base-count/ceiling*height;
+    out+=`<line x1="${left-step/2}" y1="${y}" x2="${right+step/2}" y2="${y}" stroke="${count===0 ? INK:'#d0cbc7'}" stroke-width="${count===0 ? 2:1}"/>`;
+    out+=label(left-step/2-14,y+7,count,18,MUTED,'end');
+  }
+  let path='';
+  for(let i=1;i<rows.length;i++) path+=`M${num(left+(i-1)*step)},${num(base-rows[i-1].created/ceiling*height)}L${num(left+i*step)},${num(base-rows[i].created/ceiling*height)} `;
+  out+=`<path class="trend-line" d="${path.trim()}" fill="none" stroke="${INK}" stroke-width="3" stroke-linecap="round"/>`;
+  rows.forEach((row,i)=>{
+    const x=left+i*step,y=base-row.created/ceiling*height;
+    out+=`<circle cx="${num(x)}" cy="${num(y)}" r="4" fill="${INK}" data-reveal-x="${num(x)}"><title>${esc(MONTHS[Number(row.month.slice(5))-1]+': '+row.created+' non-PM jobs created')}</title></circle>`;
+    out+=label(num(x),num(y-12),row.created,21,INK,'middle',`font-weight="600" data-reveal-x="${num(x)}" data-created-month="${row.month}"`);
   });
   return out+'</g>';
 }
@@ -158,7 +188,7 @@ function browserEnhancement() {
 function renderDashboard(data,site='All') {
   const months=validate(data,site),date=new Date(data.as_of_date+'T12:00:00Z');
   const dateLabel='Last updated '+DAYS[date.getUTCDay()]+', '+MONTHS[date.getUTCMonth()]+' '+date.getUTCDate();
-  let svg=`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="dashboard-title dashboard-description" data-updated="${esc(data.updated_at)}" data-site="${esc(site)}">\n<title id="dashboard-title">Maintenance Completion KPIs — ${esc(site === 'All' ? 'Both sites':site)}</title><desc id="dashboard-description">${esc(dateLabel)}. Selected maintenance crew. Twelve months of on-time completion, open work and overdue work. Shaded months are still in progress. Charts use a zero to 100 percent scale.</desc><rect width="1920" height="1080" fill="#f3f2f2"/><g font-family="Helvetica, Arial, sans-serif">`;
+  let svg=`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="dashboard-title dashboard-description" data-updated="${esc(data.updated_at)}|pm-nonpm-v2" data-site="${esc(site)}">\n<title id="dashboard-title">Maintenance Completion KPIs — ${esc(site === 'All' ? 'Both sites':site)}</title><desc id="dashboard-description">${esc(dateLabel)}. Selected maintenance crew. Twelve months of on-time completion, open work and overdue work. Completion charts use a zero to 100 percent scale. Non-PM jobs created use a separate count scale beneath the non-PM percentage chart. Non-PM includes repairs, projects and other work with no scheduled PM attached, not just breakdowns. Shaded completion months can change; the shaded current-month count is unfinished.</desc><rect width="1920" height="1080" fill="#f3f2f2"/><g font-family="Helvetica, Arial, sans-serif">`;
   svg+=label(48,76,'Maintenance Completion',44,INK,'start','font-weight="600"');
   svg+=label(1872,76,dateLabel,27,MUTED,'end');
   svg+='<line x1="48" y1="107" x2="1872" y2="107" stroke="#201e1d" stroke-width="2"/>';
@@ -167,11 +197,11 @@ function renderDashboard(data,site='All') {
   svg+=label(900,145,'Selected maintenance crew · Rolling 12 months',21,MUTED,'middle');
   svg+='<rect x="1490" y="125" width="24" height="24" fill="#eee1c3"/>';
   svg+=label(1526,145,'Still in progress',23);
-  svg+=chart(data,site,'Corrective',months,188);
+  svg+=chart(data,site,'Non-PM',months,188);
   svg+='<line x1="48" y1="581" x2="1872" y2="581" stroke="#201e1d" stroke-width="2"/>';
   svg+=chart(data,site,'PM',months,612);
   svg+='<line x1="48" y1="1001" x2="1872" y2="1001" stroke="#201e1d" stroke-width="2"/>';
-  svg+=label(48,1031,'PMs get 30 days. Corrective jobs get 14 days, or the recorded due date if later. Jobs count in the month created.',20,MUTED);
+  svg+=label(48,1031,'PM: keep the due date if 3+ days after creation; otherwise allow 30 days. Non-PM: allow 14 days, or the due date if later.',20,MUTED);
   svg+=label(48,1060,'Shaded months can change. Closing a late job clears open work, but does not raise the on-time %. Rejected and cancelled jobs are left out.',20,MUTED);
   svg+=label(1872,1031,'Source: Fiix',20,MUTED,'end');
   svg+='</g></svg>';

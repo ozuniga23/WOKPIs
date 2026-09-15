@@ -8,13 +8,13 @@ function fixture() {
   const months = [];
   for (let i = 0; i < 12; i++) {
     const month = new Date(Date.UTC(2025, 9 + i, 1)).toISOString().slice(0, 7);
-    for (const site of ['All', 'Grandview', 'Prosser']) for (const type of ['Corrective', 'PM']) {
+    for (const site of ['All', 'Grandview', 'Prosser']) for (const type of ['Non-PM', 'PM']) {
       months.push({month, site, type, created: 10, completed: 8, on_time: 7, open: 2, overdue: 1,
         extended_open: 0, latest_deadline: null, completion_pct: 0.7,
         reporting_status: i >= 10 ? 'Still in progress' : 'Reporting window ended'});
     }
   }
-  return {schema_version: 1, updated_at: '2026-09-15T02:00:00Z', as_of_date: '2026-09-14', months};
+  return {schema_version: 2, updated_at: '2026-09-15T02:00:00Z', as_of_date: '2026-09-14', months};
 }
 
 test('uses Pacific reporting date, not UTC update day, with no visible time', () => {
@@ -31,14 +31,13 @@ test('zero denominator is no work, not zero performance, and does not bridge mis
   assert.equal((html.match(/No work created/g) || []).length, 2);
   assert.doesNotMatch(html, /NaN|Infinity/);
 });
-test('shades provisional rows and keeps scoped overdue totals without created counts or year labels', () => {
+test('shades provisional completion rows and keeps scoped overdue totals without year labels', () => {
   const html = renderDashboard(fixture());
   assert.equal((html.match(/data-provisional-month=/g) || []).length, 4);
   assert.match(html, /data-provisional-month="2026-08"/);
   assert.doesNotMatch(html, /data-provisional-month="2026-07"/);
   assert.match(html, /12 overdue/);
   assert.match(html, /In the 12 months shown/);
-  assert.doesNotMatch(html, /data-created-month=|>Created<|\d+ created/);
   assert.doesNotMatch(html, />[^<]*\b20\d{2}\b[^<]*</);
 });
 test('site views use only the selected rows', () => {
@@ -77,7 +76,7 @@ test('browser enhancement has TV-safe syntax and skips animation for unchanged d
 
 test('animation stays finite at a target crossing and restores the full static chart after three seconds', () => {
   const data = fixture();
-  const rows = data.months.filter(r => r.site === 'All' && r.type === 'Corrective');
+  const rows = data.months.filter(r => r.site === 'All' && r.type === 'Non-PM');
   Object.assign(rows[0], {on_time:8, completion_pct:0.8});
   const html = renderDashboard(data);
   const script = html.match(/<script>([\s\S]*?)<\/script>/)[1];
@@ -96,4 +95,23 @@ test('animation stays finite at a target crossing and restores the full static c
   now=3000; pending();
   assert.deepEqual(paths.map(p=>p.getAttribute('d')), original);
   marks.forEach(p=>assert.equal(p.getAttribute('opacity'), undefined));
+});
+
+test('shows monthly created counts only inside non-PM and uses the selected site', () => {
+  const data = fixture();
+  Object.assign(data.months.find(r=>r.site==='Prosser' && r.type==='Non-PM' && r.month==='2026-09'),
+    {created:40,completed:32,on_time:28,open:8,overdue:1,completion_pct:0.7});
+  const html=renderDashboard(data,'Prosser');
+  const nonPm=html.slice(html.indexOf('<g id="non-pm">'),html.indexOf('<g id="preventive">'));
+  const pm=html.slice(html.indexOf('<g id="preventive">'));
+  assert.equal((nonPm.match(/data-created-month=/g)||[]).length,12);
+  assert.match(nonPm,/data-created-month="2026-09"[^>]*>40<\/text>/);
+  assert.doesNotMatch(pm,/data-created-month=|created-trend/);
+  assert.equal((html.match(/data-count-provisional-month=/g)||[]).length,1);
+  assert.match(html,/data-count-provisional-month="2026-09"/);
+  assert.doesNotMatch(html,/data-count-provisional-month="2026-08"/);
+});
+
+test('rejects the old corrective snapshot instead of relabeling it as non-PM', () => {
+  assert.throws(()=>renderDashboard({...fixture(),schema_version:1}),/schema_version/i);
 });
