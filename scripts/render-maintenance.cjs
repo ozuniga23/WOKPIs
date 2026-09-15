@@ -33,9 +33,9 @@ function validate(data, site) {
 function chart(data,site,type,months,top) {
   const rows = months.map(month => data.months.find(r => r.site === site && r.type === type && r.month === month));
   const latest = rows[rows.length-1], target = type === 'PM' ? 0.9 : 0.8;
-  const left = 520, right = 1840, step = (right-left)/11, graphTop = top+58, base = top+278, height = base-graphTop;
+  const left = 520, right = 1840, step = (right-left)/11, graphTop = top+58, base = top+318, height = base-graphTop;
   const percent = row => row.completion_pct === null ? '—' : (row.completion_pct *100).toFixed(1)+'%';
-  const currentMonth = MONTHS[Number(latest.month.slice(5))-1]+' '+latest.month.slice(0,4);
+  const currentMonth = MONTHS[Number(latest.month.slice(5))-1];
   const overdue = rows.reduce((sum,r) => sum+r.overdue,0);
   let out = `<g id="${type === 'PM' ? 'preventive':'corrective'}">`;
   out += label(48,top+10,type === 'PM' ? 'Preventive (PM)' : 'Corrective',32,INK,'start','font-weight="600"');
@@ -43,13 +43,13 @@ function chart(data,site,type,months,top) {
   out += label(44,top+143,percent(latest),88,latest.completion_pct !== null && latest.completion_pct < target ? RED : INK,'start','font-weight="700" letter-spacing="-3"');
   out += label(48,top+179,currentMonth+' · So far',23,MUTED);
   if (latest.created === 0) out += label(48,top+211,'No work created',21,MUTED);
-  else out += label(48,top+211,latest.created+' created · '+latest.on_time+' on time',23);
+  else out += label(48,top+211,latest.on_time+' on time',23);
   out += label(48,top+243,latest.open+' still open this month',23);
   out += label(48,top+300,overdue+' overdue',31,overdue ? RED : INK,'start','font-weight="700"');
   out += label(48,top+329,'In the 12 months shown',20,MUTED);
 
   rows.forEach((row,i) => {
-    if (row.reporting_status === 'Still in progress') out += `<rect data-provisional-month="${row.month}" x="${num(left+i*step-step/2)}" y="${graphTop-35}" width="${step}" height="${height+51}" fill="#eee1c3"><title>${esc(row.month+' · Still in progress — numbers can change')}</title></rect>`;
+    if (row.reporting_status === 'Still in progress') out += `<rect data-provisional-month="${row.month}" x="${num(left+i*step-step/2)}" y="${graphTop-35}" width="${step}" height="${height+51}" fill="#eee1c3"><title>${esc(MONTHS[Number(row.month.slice(5))-1]+' · Still in progress — numbers can change')}</title></rect>`;
   });
   for (const pct of [0,0.5,1]) {
     const y = base-pct*height;
@@ -75,14 +75,11 @@ function chart(data,site,type,months,top) {
     const m=Number(row.month.slice(5))-1;
     if (row.completion_pct !== null) {
       const y=base-row.completion_pct*height;
-      out += `<rect x="${x-7}" y="${num(y-7)}" width="14" height="14" fill="${color}" data-reveal-x="${x}"><title>${esc(row.month+': '+percent(row)+'; '+row.on_time+' on time out of '+row.created+' created')}</title></rect>`;
+      out += `<rect x="${x-7}" y="${num(y-7)}" width="14" height="14" fill="${color}" data-reveal-x="${x}"><title>${esc(MONTHS[m]+': '+percent(row))}</title></rect>`;
       out += label(x,num(y-19),percent(row),22,color,'middle',`font-weight="600" data-reveal-x="${x}"`);
     } else out += label(x,base-15,'—',22,MUTED,'middle');
-    out += label(x,top+315,MONTHS[m].slice(0,3),23,INK,'middle');
-    out += label(x,top+338,row.month.slice(0,4),17,MUTED,'middle');
-    out += label(x,top+370,row.created,22,INK,'middle',`data-created-month="${row.month}"`);
+    out += label(x,top+355,MONTHS[m].slice(0,3),23,INK,'middle');
   });
-  out += label(450,top+370,'Created',19,MUTED,'end');
   return out+'</g>';
 }
 
@@ -161,7 +158,7 @@ function browserEnhancement() {
 function renderDashboard(data,site='All') {
   const months=validate(data,site),date=new Date(data.as_of_date+'T12:00:00Z');
   const dateLabel='Last updated '+DAYS[date.getUTCDay()]+', '+MONTHS[date.getUTCMonth()]+' '+date.getUTCDate();
-  let svg=`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="dashboard-title dashboard-description" data-updated="${esc(data.updated_at)}" data-site="${esc(site)}">\n<title id="dashboard-title">Maintenance Completion KPIs — ${esc(site === 'All' ? 'Both sites':site)}</title><desc id="dashboard-description">${esc(dateLabel)}. Selected maintenance crew. Twelve months of on-time completion, created counts and overdue work. Shaded months are still in progress. Charts use a zero to 100 percent scale.</desc><rect width="1920" height="1080" fill="#f3f2f2"/><g font-family="Helvetica, Arial, sans-serif">`;
+  let svg=`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="dashboard-title dashboard-description" data-updated="${esc(data.updated_at)}" data-site="${esc(site)}">\n<title id="dashboard-title">Maintenance Completion KPIs — ${esc(site === 'All' ? 'Both sites':site)}</title><desc id="dashboard-description">${esc(dateLabel)}. Selected maintenance crew. Twelve months of on-time completion, open work and overdue work. Shaded months are still in progress. Charts use a zero to 100 percent scale.</desc><rect width="1920" height="1080" fill="#f3f2f2"/><g font-family="Helvetica, Arial, sans-serif">`;
   svg+=label(48,76,'Maintenance Completion',44,INK,'start','font-weight="600"');
   svg+=label(1872,76,dateLabel,27,MUTED,'end');
   svg+='<line x1="48" y1="107" x2="1872" y2="107" stroke="#201e1d" stroke-width="2"/>';

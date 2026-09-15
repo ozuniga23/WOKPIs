@@ -31,14 +31,15 @@ test('zero denominator is no work, not zero performance, and does not bridge mis
   assert.equal((html.match(/No work created/g) || []).length, 2);
   assert.doesNotMatch(html, /NaN|Infinity/);
 });
-test('shades only provisional rows and shows count per month plus scoped overdue totals', () => {
+test('shades provisional rows and keeps scoped overdue totals without created counts or year labels', () => {
   const html = renderDashboard(fixture());
   assert.equal((html.match(/data-provisional-month=/g) || []).length, 4);
   assert.match(html, /data-provisional-month="2026-08"/);
   assert.doesNotMatch(html, /data-provisional-month="2026-07"/);
   assert.match(html, /12 overdue/);
   assert.match(html, /In the 12 months shown/);
-  assert.equal((html.match(/data-created-month=/g) || []).length, 24);
+  assert.doesNotMatch(html, /data-created-month=|>Created<|\d+ created/);
+  assert.doesNotMatch(html, />[^<]*\b20\d{2}\b[^<]*</);
 });
 test('site views use only the selected rows', () => {
   const data = fixture();
