@@ -1,3 +1,5 @@
+> Historical plan: the live-data runtime now reads an approved aggregate endpoint. Routine refreshes update and verify the private Sheet/publication record; they do not regenerate HTML/JSON or publish GitHub changes. Earlier Corrective/cloud-browser instructions below are superseded.
+
 # Daily Maintenance Completion Implementation Plan
 
 **Goal:** Refresh a maintenance completion TV display from verified Fiix data through a private Google Sheet every weekday.
@@ -37,3 +39,4 @@
 `node scripts/render-maintenance.cjs <verified-sheet-readback.json> maintenance-completion-kpis.html All`
 
 Compare native Sheet counts with Fiix and grouped totals before publishing. Confirm all three generated pages use the same update date and each filtered site's counts differ as expected.
+

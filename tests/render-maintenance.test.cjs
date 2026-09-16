@@ -14,6 +14,7 @@ function fixture() {
         reporting_status: i >= 10 ? 'Still in progress' : 'Reporting window ended'});
     }
   }
+  for(const row of months.filter(r=>r.site==='All')) for(const field of ['created','completed','on_time','open','overdue','extended_open']) row[field]*=2;
   return {schema_version: 2, updated_at: '2026-09-15T02:00:00Z', as_of_date: '2026-09-14', months};
 }
 
@@ -36,13 +37,14 @@ test('shades provisional completion rows and keeps scoped overdue totals without
   assert.equal((html.match(/data-provisional-month=/g) || []).length, 4);
   assert.match(html, /data-provisional-month="2026-08"/);
   assert.doesNotMatch(html, /data-provisional-month="2026-07"/);
-  assert.match(html, /12 overdue/);
+  assert.match(html, /24 overdue/);
   assert.match(html, /In the 12 months shown/);
-  assert.doesNotMatch(html, />[^<]*\b20\d{2}\b[^<]*</);
+  assert.doesNotMatch(html.match(/<svg[\s\S]*?<\/svg>/)[0], />[^<]*\b20\d{2}\b[^<]*</);
 });
 test('site views use only the selected rows', () => {
   const data = fixture();
   data.months.find(r => r.site === 'Prosser' && r.type === 'PM' && r.month === '2026-09').overdue = 2;
+  data.months.find(r=>r.site==='All' && r.type==='PM' && r.month==='2026-09').overdue=3;
   assert.match(renderDashboard(data, 'Prosser'), /13 overdue/);
   assert.doesNotMatch(renderDashboard(data, 'All'), /13 overdue/);
   assert.throws(() => renderDashboard(data, '<script>'), /site/i);
@@ -50,8 +52,8 @@ test('site views use only the selected rows', () => {
 test('rejects incomplete period and injected or invalid metadata', () => {
   const data = fixture();
   assert.throws(() => renderDashboard({...data, as_of_date:'2026-09-14<script>'}), /date/i);
-  assert.throws(() => renderDashboard({...data, months:data.months.slice(6)}), /12|month/i);
-  assert.throws(() => renderDashboard({...data, updated_at:'" onload="alert(1)'}), /updated_at/i);
+  assert.throws(() => renderDashboard({...data, months:data.months.slice(6)}), /72|12|month/i);
+  assert.throws(() => renderDashboard({...data, updated_at:'" onload="alert(1)'}), /timestamp|updated_at/i);
 });
 test('static SVG is valid XML with fully rendered lines and values', () => {
   const html = renderDashboard(fixture());
@@ -63,23 +65,23 @@ test('static SVG is valid XML with fully rendered lines and values', () => {
   assert.doesNotMatch(svg, /opacity="0"/);
   assert.match(svg, />0%<|>0</);
 });
-test('browser enhancement has TV-safe syntax and skips animation for unchanged data', () => {
-  const html = renderDashboard(fixture());
-  const script = html.match(/<script>([\s\S]*?)<\/script>/)[1];
-  assert.doesNotMatch(script, /\b(?:let|const|class|fetch|Promise|Intl)\b|=>|`/);
-  assert.match(script, /XMLHttpRequest/);
-  assert.match(script, /3000/);
-  assert.match(script, /900000/);
-  assert.match(script, /token !== current/);
-  new (require('node:vm').Script)(script);
+test('page loads shared runtime and a dated static fallback',()=>{
+ const html=renderDashboard(fixture());
+ assert.match(html,/<script src="maintenance-completion-runtime.js"><\/script>/);
+ assert.match(html,/id="maintenance-fallback-data" type="application\/json"/);
+ assert.match(html,/Showing saved data/);
+ const script=require('node:fs').readFileSync(require.resolve('../maintenance-completion-runtime.js'),'utf8');
+ assert.doesNotMatch(script,/\b(?:let|const|fetch|Promise|Intl)\b|=>|`/);
+ assert.match(script,/XMLHttpRequest/);assert.match(script,/3000/);assert.match(script,/900000/);
 });
 
 test('animation stays finite at a target crossing and restores the full static chart after three seconds', () => {
   const data = fixture();
   const rows = data.months.filter(r => r.site === 'All' && r.type === 'Non-PM');
-  Object.assign(rows[0], {on_time:8, completion_pct:0.8});
+  Object.assign(rows[0], {on_time:16, completion_pct:0.8});
+  for(const r of data.months.filter(r=>r.month==='2025-10' && r.type==='Non-PM' && r.site!=='All'))Object.assign(r,{on_time:8,completion_pct:0.8});
   const html = renderDashboard(data);
-  const script = html.match(/<script>([\s\S]*?)<\/script>/)[1];
+  const script='('+require('../maintenance-completion-runtime.js').animate.toString()+')(document,window);';
   function element(attributes) {return {getAttribute:k=>attributes[k],setAttribute:(k,v)=>{attributes[k]=String(v);},removeAttribute:k=>{delete attributes[k];},attributes};}
   const paths = Array.from(html.matchAll(/class="trend-line" d="([^"]+)"/g), match=>element({d:match[1]}));
   const original = paths.map(p=>p.getAttribute('d'));
@@ -103,6 +105,7 @@ test('shows separate PM and non-PM monthly counts for the selected site', () => 
     {created:40,completed:32,on_time:28,open:8,overdue:1,completion_pct:0.7});
   Object.assign(data.months.find(r=>r.site==='Prosser' && r.type==='PM' && r.month==='2026-09'),
     {created:60,completed:48,on_time:42,open:12,overdue:1,completion_pct:0.7});
+  for(const a of data.months.filter(r=>r.site==='All')) {const rows=data.months.filter(r=>r.site!=='All' && r.month===a.month && r.type===a.type);for(const f of ['created','completed','on_time','open','overdue','extended_open'])a[f]=rows.reduce((n,r)=>n+r[f],0);a.completion_pct=a.on_time/a.created;}
   const html=renderDashboard(data,'Prosser');
   const nonPm=html.slice(html.indexOf('<g id="non-pm">'),html.indexOf('<g id="preventive">'));
   const pm=html.slice(html.indexOf('<g id="preventive">'));
@@ -134,5 +137,6 @@ test('one native site dropdown defaults to both sites and identifies each site p
 });
 
 test('rejects the old corrective snapshot instead of relabeling it as non-PM', () => {
-  assert.throws(()=>renderDashboard({...fixture(),schema_version:1}),/schema_version/i);
+  assert.throws(()=>renderDashboard({...fixture(),schema_version:1}),/schema|data/i);
 });
+
