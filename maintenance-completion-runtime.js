@@ -266,6 +266,7 @@ function renderSvg(data,site) {
   }
   // The only public endpoint setting. Empty string disables live loading for rollback.
   var ENDPOINT='https://script.google.com/macros/s/AKfycbxoIyxtpCZsIBArCdtaOhuHCA6_0ekOlan62bou_tPCkNfSFshIla8-8ieovbJlA452yw/exec';
+  var CACHE_KEY='maintenance-completion-last-good-v1',MAX_PAYLOAD=200000,FIRST_HOLD_MS=9000;
   function start(win,doc,options) {
     options=options || {};
     if (!doc.querySelector || !doc.getElementById) { return; }
@@ -273,22 +274,73 @@ function renderSvg(data,site) {
     var now=options.now || function(){return new Date().getTime();};
     var reveal=options.animate || function(){return animate(doc,win);};
     var old=doc.querySelector('svg[data-updated]'),status=doc.getElementById('maintenance-live-status');
-    var current,canonical,live=false,inflight=false,lastAttempt=-900000,sequence=0,cancelAnimation;
+    var current,canonical,live=false,inflight=false,lastAttempt=-900000,sequence=0,cancelAnimation,revealed=false,site;
     function notice(message){if(status){status.textContent=message;}}
     function failure(){notice(live?'Live update unavailable · Showing last verified data':'Live update unavailable · Showing saved data');}
+    function show(){
+      if(revealed){return;}
+      revealed=true;
+      if(doc.documentElement && doc.documentElement.className.indexOf('maintenance-ready')<0){
+        doc.documentElement.className+=' maintenance-ready';
+      }
+      cancelAnimation=reveal();
+    }
+    function removeCache(){try{win.localStorage.removeItem(CACHE_KEY);}catch(error){}}
+    function saveCache(data){
+      try{
+        var raw=JSON.stringify(data);
+        if(raw.length<=MAX_PAYLOAD){win.localStorage.setItem(CACHE_KEY,raw);}
+      }catch(error){}
+    }
+    function makeSvg(data){
+      var holder=doc.createElement('div');
+      holder.innerHTML=renderSvg(data,site);
+      var svg=holder.querySelector('svg[data-updated]');
+      if(!svg || svg.getAttribute('data-site')!==site){throw new Error('Invalid chart');}
+      return svg;
+    }
+    function loadCache(){
+      var raw;
+      try{raw=win.localStorage.getItem(CACHE_KEY);}catch(error){return false;}
+      if(raw===null){return false;}
+      var cached,cachedCanonical;
+      try{
+        if(raw.length>MAX_PAYLOAD){throw new Error('Oversized cache');}
+        cached=MaintenanceData.validatePayload(JSON.parse(raw));
+        cachedCanonical=MaintenanceData.canonical(cached);
+        if(cached.updated_at<current.updated_at || cached.as_of_date<current.as_of_date ||
+           (cached.updated_at===current.updated_at && cachedCanonical!==canonical)){throw new Error('Stale cache');}
+      }catch(error){removeCache();return false;}
+      try{
+        var svg=makeSvg(cached);
+        old.parentNode.replaceChild(svg,old);old=svg;
+        current=cached;canonical=cachedCanonical;live=true;
+        return true;
+      }catch(error){return false;}
+    }
     try {
       current=JSON.parse(doc.getElementById('maintenance-fallback-data').textContent);
       MaintenanceData.validatePayload(current);canonical=MaintenanceData.canonical(current);
       if (!old || ['All','Grandview','Prosser'].indexOf(old.getAttribute('data-site'))<0) { return; }
+      site=old.getAttribute('data-site');
     } catch(error) { failure();return; }
-    cancelAnimation=reveal();
-    notice('Loading live data · Showing saved data');
-    function refresh() {
-      if (!endpoint || !win.XMLHttpRequest) { failure();return; }
-      if (inflight || doc.hidden || now()-lastAttempt<900000) { return; }
+    if(!endpoint){removeCache();show();failure();}
+    else if(loadCache()){show();notice('');}
+    else{
+      notice('Loading live data');
+      win.setTimeout(function(){
+        if(revealed){return;}
+        show();
+        if(inflight){notice('Loading live data · Showing saved data');}
+        else{failure();}
+      },FIRST_HOLD_MS);
+    }
+    function refresh(initial) {
+      if (!endpoint || !win.XMLHttpRequest) {show();failure();return;}
+      if (inflight || (!initial && doc.hidden) || now()-lastAttempt<900000) { return; }
       lastAttempt=now();inflight=true;sequence+=1;
       var token=sequence,xhr,settled=false;
-      function fail(){if(settled || token!==sequence){return;}settled=true;inflight=false;failure();}
+      function fail(){if(settled || token!==sequence){return;}settled=true;inflight=false;if(revealed){failure();}}
       try {
         xhr=new win.XMLHttpRequest();
         xhr.open('GET',endpoint+'?v='+lastAttempt,true);xhr.withCredentials=false;xhr.timeout=30000;
@@ -296,27 +348,25 @@ function renderSvg(data,site) {
         xhr.onreadystatechange=function(){
           if (xhr.readyState!==4 || settled || token!==sequence) { return; }
           try {
-            if (xhr.status!==200 || !/^application\/json(?:;|$)/i.test(xhr.getResponseHeader('Content-Type') || '') || xhr.responseText.length>200000) { throw new Error('Unavailable'); }
+            if (xhr.status!==200 || !/^application\/json(?:;|$)/i.test(xhr.getResponseHeader('Content-Type') || '') || xhr.responseText.length>MAX_PAYLOAD) { throw new Error('Unavailable'); }
             var next=MaintenanceData.validatePayload(JSON.parse(xhr.responseText));
             var nextCanonical=MaintenanceData.canonical(next);
             if (next.updated_at<current.updated_at || next.as_of_date<current.as_of_date || (next.updated_at===current.updated_at && nextCanonical!==canonical)) { throw new Error('Stale publication'); }
+            saveCache(next);
             if (nextCanonical!==canonical) {
-              var site=old.getAttribute('data-site'),holder=doc.createElement('div');
-              holder.innerHTML=renderSvg(next,site);
-              var svg=holder.querySelector('svg[data-updated]');
-              if (!svg || svg.getAttribute('data-site')!==site) { throw new Error('Invalid chart'); }
+              var svg=makeSvg(next);
               if (cancelAnimation) { cancelAnimation(); }
               old.parentNode.replaceChild(svg,old);old=svg;
-              cancelAnimation=reveal();
+              if(revealed){cancelAnimation=reveal();}
             }
-            current=next;canonical=nextCanonical;live=true;notice('');
+            current=next;canonical=nextCanonical;live=true;show();notice('');
             settled=true;inflight=false;
           } catch(error){fail();}
         };
         xhr.send(null);
       } catch(error){fail();}
     }
-    refresh();win.setInterval(refresh,900000);
+    refresh(true);win.setInterval(refresh,900000);
     if (doc.addEventListener) { doc.addEventListener('visibilitychange',function(){if(!doc.hidden){refresh();}},false); }
     return {refresh:refresh};
   }
